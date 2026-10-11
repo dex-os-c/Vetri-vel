@@ -35,7 +35,7 @@ function portrait(who,cx,cy,r){
   let img,m,sx,sy,sw;
   if(who==='Vetri'){img=IMG.talk;m=M.talk;sx=m.AX-40;sy=2;sw=80}
   else if(who==='Royal Messenger'){img=IMG.msgAnn;m=M.msgAnn;sx=m.AX-58;sy=4;sw=88}
-  else{img=kingSheet();m=M.msgAnn;sx=m.AX-58;sy=4;sw=88}
+  else{img=IMG.kidle;m=M.kidle;sx=m.AX-46;sy=6;sw=92}
   ctx.drawImage(img,sx,sy,sw,sw,cx-r,cy-r,2*r,2*r);ctx.restore();
   ctx.strokeStyle='#d4a443';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,r,0,7);ctx.stroke();
 }

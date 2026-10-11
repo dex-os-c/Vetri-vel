@@ -40,10 +40,11 @@ const ANIMS={
   fall:{sheet:'fall',fps:24,loop:false,scale:S},
   soldierA:{sheet:'soldierA',stride:150,scale:0.58},soldierB:{sheet:'soldierB',stride:190,scale:0.62},
   archer:{sheet:'archer',stride:150,scale:0.64},shield:{sheet:'shield',stride:150,scale:0.66},bearer:{sheet:'bearer',stride:155,scale:0.6},
+  kidle:{sheet:'kidle',fps:8,loop:'pingpong',scale:0.66},kspeak:{sheet:'kspeak',fps:8,loop:'pingpong',scale:0.66},kread:{sheet:'kread',fps:12,loop:false,scale:0.66},
   msgRun:{sheet:'msgRun',stride:175,scale:0.6},msgStop:{sheet:'msgStop',fps:12,scale:0.6},msgAnn:{sheet:'msgAnn',fps:8,loop:'pingpong',scale:0.6,native:-1}
 };
 const SHEETS=Object.keys(M);
-const IMG={},BGI={};let loaded=0;const BGN=['temple','banyan','road'];const total=SHEETS.length+BGN.length;
+const IMG={},BGI={};let loaded=0;const BGN=['temple','banyan','road','court','pillars','scroll'];const total=SHEETS.length+BGN.length;
 const done=()=>{if(++loaded==total)requestAnimationFrame(loop)};
 SHEETS.forEach(n=>{const i=new Image();i.onload=done;i.src=(window.ASSETS&&window.ASSETS[n])||('assets/'+n+'.webp');IMG[n]=i});
 BGN.forEach(n=>{const i=new Image();i.onload=done;i.src=(window.ASSETS&&window.ASSETS['bg_'+n])||('assets/bg_'+n+'.webp');BGI[n]=i});
