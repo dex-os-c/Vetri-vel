@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Chola Warrior</title>
+<style>
+html,body{margin:0;height:100%;background:#1a0f0a;overflow:hidden;font-family:Georgia,serif;touch-action:none;-webkit-user-select:none;user-select:none}
+canvas{position:fixed;inset:0;width:100%;height:100%;object-fit:contain;background:#1a0f0a}
+.b{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom,0px));width:68px;height:68px;border-radius:50%;border:2px solid #f3d9a4;background:rgba(40,20,10,.55);color:#f3d9a4;font-size:22px;display:flex;align-items:center;justify-content:center;touch-action:none;-webkit-tap-highlight-color:transparent}
+.b.on{background:rgba(243,217,164,.45)}
+#l{left:calc(16px + env(safe-area-inset-left,0px))}#r{left:calc(100px + env(safe-area-inset-left,0px))}
+#run{left:calc(184px + env(safe-area-inset-left,0px));font-size:14px}
+#a{right:calc(16px + env(safe-area-inset-right,0px));width:78px;height:78px}
+#j{right:calc(110px + env(safe-area-inset-right,0px));bottom:calc(30px + env(safe-area-inset-bottom,0px))}
+#hud{position:fixed;left:12px;top:calc(8px + env(safe-area-inset-top,0px));color:#f3d9a4;font-size:12px;text-shadow:0 1px 2px #000}
+</style></head><body>
+<canvas id="c" width="960" height="540"></canvas>
+<div id="hud">Rotate phone sideways · Keys: A/D move, Shift run, W jump, J attack</div>
+<div class="b" id="l" data-k="ArrowLeft">◀</div>
+<div class="b" id="r" data-k="ArrowRight">▶</div>
+<div class="b" id="run">RUN</div>
+<div class="b" id="j" data-k="Space">⤒</div>
+<div class="b" id="a" data-k="KeyJ">⚔</div>
+<script src="game.js"></script>
+<script>
+document.querySelectorAll('.b[data-k]').forEach(b=>{const k=b.dataset.k,
+on=e=>{e.preventDefault();keys[k]=true;b.classList.add('on')},off=e=>{e.preventDefault();keys[k]=false;b.classList.remove('on')};
+b.addEventListener('pointerdown',on);['pointerup','pointercancel','pointerleave'].forEach(t=>b.addEventListener(t,off));b.addEventListener('contextmenu',e=>e.preventDefault())});
+const run=document.getElementById('run');
+run.addEventListener('pointerdown',e=>{e.preventDefault();keys.ShiftLeft=!keys.ShiftLeft;run.classList.toggle('on',!!keys.ShiftLeft)});
+setTimeout(()=>document.getElementById('hud').style.display='none',6000);
+</script></body></html>
