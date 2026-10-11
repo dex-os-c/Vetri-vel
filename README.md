@@ -1,18 +1,19 @@
 # Vetri Vel — Chola Warrior (2D)
 
-Side-scrolling prototype: a Chola warrior with idle, walk, run, jump and sword-slash animations.
+Story-driven 2D prototype set in the Chola Empire (reign of Rajendra Chola I).
+
+**Arc I — The Return:** Commander Vetri Vel leads the surviving soldiers home to Thanjai, a royal messenger summons him,
+and in the King's Court Rajendra sends him on **Mission 01 — The Silent Frontier**.
 
 ## Play
-Open `index.html` in a browser. If images don't load, run a local server in this folder:
-
-    python3 -m http.server 8000
-
-then open http://localhost:8000
+Open `index.html` (or run `python3 -m http.server 8000` in this folder and open http://localhost:8000).
 
 ## Controls
-- Keyboard: A/D or arrows move, Shift run, W/Space jump, J attack
-- Phone: on-screen buttons (rotate to landscape)
+- Story mode: hold ▶ / D / → to walk, tap / Space / Enter to advance dialogue, N or SKIP to skip a scene.
+- Free play (F): A/D move, Shift run, W/Space jump, J attack, H hurt, K defeat, T talk, Y weary march.
+- R restarts the story. Phone: on-screen buttons (landscape).
 
-## Tweaking animations
-Everything is in the table at the top of `game.js` (scale, speed, stride, fps, offsets).
-Sprite sheets are in `assets/` (idle, walk, run, attack).
+## Editing the story
+All story and dialogue text is at the top of `game.js` (`STORY`, `MSG_LINES`, `COURT_A`, `COURT_B`, `MISSION`).
+Lines marked `(draft)` are placeholders. `src/` holds the game source split into parts; `game.js` is the combined file.
+Animation settings (scale, speed, stride, fps) are in the `ANIMS` table.
