@@ -10,17 +10,20 @@ function pingpong(f,n){const c=2*(n-1),k=f%c;return k>=n?c-k:k}
 /* ---------------- particles: dust puffs + drifting motes ---------------- */
 function puff(x,y,dir){fx.push({k:'puff',x,y,vx:-dir*(8+rnd()*14),vy:-(4+rnd()*8),r:3+rnd()*3,life:0,max:.55+rnd()*.3})}
 const MOTES=[];for(let i=0;i<46;i++)MOTES.push({x:rnd()*W,y:rnd()*H*0.85,s:.4+rnd()*1.2,r:.8+rnd()*1.8,ph:rnd()*6.28,v:6+rnd()*14});
-function fxUpdate(dt){for(const f of fx){f.life+=dt;f.x+=f.vx*dt;f.y+=f.vy*dt;f.r+=dt*10}fx=fx.filter(f=>f.life<f.max);
+function fxUpdate(dt){for(const f of fx){f.life+=dt;f.x+=f.vx*dt;f.y+=f.vy*dt;if(f.k==='puff')f.r+=dt*10;else if(f.k==='leaf'){f.rot+=dt*2.2;f.y+=Math.sin(f.life*3+f.rot)*18*dt}else if(f.k==='spark')f.vy+=500*dt}fx=fx.filter(f=>f.life<f.max);
   for(const m of MOTES){m.x+=m.v*dt*m.s;m.y+=Math.sin(T*.6+m.ph)*8*dt;if(m.x>W+10){m.x=-10;m.y=rnd()*H*0.85}}}
 function fxDraw(){
-  for(const f of fx){const a=(1-f.life/f.max)*0.32;ctx.fillStyle='rgba(176,138,102,'+a+')';ctx.beginPath();ctx.arc(f.x-camX,f.y,f.r,0,7);ctx.fill()}
+  for(const f of fx){const k=1-f.life/f.max;
+    if(f.k==='leaf'){ctx.save();ctx.translate(f.x-camX,f.y);ctx.rotate(f.rot);ctx.fillStyle='rgba(120,88,46,'+(.7*Math.min(1,k*2))+')';ctx.beginPath();ctx.ellipse(0,0,f.r*1.7,f.r*.8,0,0,7);ctx.fill();ctx.restore()}
+    else if(f.k==='spark'){ctx.save();ctx.globalCompositeOperation='lighter';ctx.fillStyle='rgba(255,220,150,'+k+')';ctx.beginPath();ctx.arc(f.x-camX,f.y,f.r,0,7);ctx.fill();ctx.restore()}
+    else{ctx.fillStyle='rgba(176,138,102,'+k*0.32+')';ctx.beginPath();ctx.arc(f.x-camX,f.y,f.r,0,7);ctx.fill()}}
 }
 function motesDraw(col){ctx.save();ctx.globalCompositeOperation='lighter';
   for(const m of MOTES){const a=.14+.12*Math.sin(T*1.3+m.ph);ctx.fillStyle=col.replace('A',a.toFixed(3));ctx.beginPath();ctx.arc(m.x,m.y,m.r,0,7);ctx.fill()}ctx.restore()}
 /* ---------------- player ---------------- */
 function updatePlayer(dt){
   const left=keys.KeyA||keys.ArrowLeft,right=keys.KeyD||keys.ArrowRight,run=keys.ShiftLeft||keys.ShiftRight;
-  let dir=(right?1:0)-(left?1:0);const free=mode==='free',walkOK=free||(scn==='s1'&&ph==='walk');
+  let dir=(right?1:0)-(left?1:0);const free=mode==='free',walkOK=free||(scn==='s1'&&ph==='walk')||(scn==='road'&&ph==='walk');
   if(p.lock||!walkOK)dir=0;
   if(mode==='scene'&&dir<0)dir=0;
   p.vy+=1900*dt;p.y+=p.vy*dt;let landed=false;if(p.y>=GROUND){if(p.air)landed=true;p.y=GROUND;p.vy=0;p.air=false}
@@ -34,7 +37,7 @@ function updatePlayer(dt){
     else if(p.jp==='post'){p.jt+=dt;if(p.jt>=J.postT)p.jp=null}
     if((keys.KeyJ||keys.KeyX)&&!p.atk&&!p.air&&!p.jp){p.atk=true;p.talk=false;set('attack')}
   }
-  const wk=p.weary?'weary':'walk',rn=free&&run&&!p.weary;let mv=0;
+  const wk=p.weary?'weary':'walk',rn=(free||scn==='road')&&run&&!p.weary;let mv=0;
   if(p.atk){const A=ANIMS.attack,f=p.t*A.fps,n=M.attack.n;if(dir)p.face=dir;if(f>n*0.1&&f<n*0.55)p.x+=p.face*80*dt}
   else if(dir){p.face=dir;p.talk=false;mv=ANIMS[rn?'run':wk].speed*dt;p.x+=dir*mv}
   p.x=clamp(p.x,60,WORLD-60);p.t+=dt;

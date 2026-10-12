@@ -11,7 +11,10 @@ function skipScene(){
   if(scn==='intro'){go('s1','walk');fadeT=0}
   else if(scn==='s1'){p.lock=true;beginCourt()}
   else if(scn==='s2'){go('title','show');fade=1;fadeT=1}
-  else if(scn==='title'){go('end','end')}
+  else if(scn==='title'){beginRoad()}
+  else if(scn==='road'){beginYard()}
+  else if(scn==='yard'){go('chap','card');fade=1;fadeT=1}
+  else if(scn==='chap'){go('chap','end')}
   sync();
 }
 function updateS1(dt){

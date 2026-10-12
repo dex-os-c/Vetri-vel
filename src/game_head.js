@@ -1,7 +1,7 @@
 if(typeof CanvasRenderingContext2D!=='undefined'&&!CanvasRenderingContext2D.prototype.roundRect)CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h){this.rect(x,y,w,h)};
 const cv=document.getElementById('c'),ctx=cv.getContext('2d');
 ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
-const W=960,H=540,GROUND=405,WORLD=4300;
+const W=960,H=540,GROUND=405,WORLD=6000;
 const M=__META__;
 /* =====================================================================================
    STORY + DIALOGUE  (edit the text here — everything on screen comes from these lists)
@@ -64,4 +64,4 @@ function dlUpdate(dt){if(!dl.active)return;const L=dl.q[dl.i];dl.typed+=dt*40;
 function go(s,pp){scn=s;ph=pp;T=0}
 function setBars(v){barsT=v}
 function sync(){const b=document.body;if(!b||!b.dataset)return;b.dataset.mode=mode;
-  b.dataset.walk=(mode==='free'||(scn==='s1'&&ph==='walk'))?'1':'0';b.dataset.scn=scn}
+  b.dataset.walk=(mode==='free'||(scn==='s1'&&ph==='walk')||(scn==='road'&&ph==='walk')||(scn==='yard'&&cb&&cb.e&&!cb.e.dead))?'1':'0';b.dataset.scn=scn}
