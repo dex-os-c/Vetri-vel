@@ -18,7 +18,7 @@ function drawIntro(){
   ctx.restore();ctx.textAlign='left';
   ctx.fillStyle='rgba(216,193,154,'+(0.35+0.2*Math.sin(T*3))+')';ctx.font='15px Georgia,serif';ctx.textAlign='center';ctx.fillText('tap to continue',W/2,H-30);ctx.textAlign='left';
 }
-function updateTitle(dt){fadeT=1;fade=1;if(scn==='title'&&T>7.2)beginRoad()}
+function updateTitle(dt){fadeT=1;fade=1;if(scn==='title'&&T>7.2)beginGate()}
 function drawTitle(){
   const tt=scn==='end'?T+8:T;
   ctx.fillStyle='#050203';ctx.fillRect(0,0,W,H);motesDraw('rgba(255,170,90,A)');
@@ -34,9 +34,9 @@ function portrait(who,cx,cy,r){
   const gg=ctx.createRadialGradient(cx,cy,4,cx,cy,r);gg.addColorStop(0,'rgba(190,120,60,.35)');gg.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=gg;ctx.fillRect(cx-r,cy-r,2*r,2*r);
   let img,m,sx,sy,sw;
   if(who==='Vetri'||who==='Commander'){img=IMG.talk;m=M.talk;sx=m.AX-40;sy=2;sw=80}
-  else if(who==='Young Soldier'){img=IMG.soldierA;m=M.soldierA;sx=m.AX-38;sy=2;sw=76}
+  else if(who==='Young Soldier'){img=IMG.youngIdle;m=M.youngIdle;sx=m.AX-40;sy=2;sw=80}
   else if(who==='Veteran'){img=IMG.soldierB;m=M.soldierB;sx=m.AX-34;sy=2;sw=68}
-  else if(who==='Scout'){img=IMG.msgAnn;m=M.msgAnn;sx=m.AX-58;sy=4;sw=88}
+  else if(who==='Scout'){img=IMG.scoutIdle;m=M.scoutIdle;sx=m.AX-38;sy=2;sw=76}
   else if(who==='Royal Messenger'){img=IMG.msgAnn;m=M.msgAnn;sx=m.AX-58;sy=4;sw=88}
   else{img=IMG.kidle;m=M.kidle;sx=m.AX-46;sy=6;sw=92}
   ctx.drawImage(img,sx,sy,sw,sw,cx-r,cy-r,2*r,2*r);ctx.restore();
@@ -63,11 +63,11 @@ function update(dt){
   if(mode==='scene'){
     if(scn==='intro')updateIntro(dt);else if(scn==='s1'){updatePlayer(dt);updateS1(dt)}
     else if(scn==='s2')updateS2(dt);else if(scn==='title'||scn==='end')updateTitle(dt);
-    else if(scn==='road'){updatePlayer(dt);updateRoad(dt)}else if(scn==='yard'){updateYard(dt)}else if(scn==='chap')updateChapter(dt);
+    else if(scn==='gate'){updateGate(dt)}else if(scn==='road'){updatePlayer(dt);updateRoad(dt)}else if(scn==='yard'){updateYard(dt)}else if(scn==='chap')updateChapter(dt);
   }else{updatePlayer(dt);camX+=((p.x-W/2)-camX)*Math.min(1,6*dt);camX=clamp(camX,0,WORLD-W)}
   bars+=(barsT-bars)*Math.min(1,4*dt);zoom+=(zoomT-zoom)*Math.min(1,2.2*dt);fade+=(fadeT-fade)*Math.min(1,2.6*dt);
-  cyT=(dl.active&&(scn==='s1'||scn==='s2'||scn==='road'||scn==='yard'))?-68:0;cy+=(cyT-cy)*Math.min(1,3*dt);
-  if(!['s2','road','yard'].includes(scn)){zf.x=W/2;zf.y=GROUND-110}
+  cyT=(dl.active&&(scn==='s1'||scn==='s2'||scn==='road'||scn==='yard'||scn==='gate'))?-68:0;cy+=(cyT-cy)*Math.min(1,3*dt);
+  if(!['s2','road','yard','gate'].includes(scn)){zf.x=W/2;zf.y=GROUND-110}
   update.s=(update.s||0)+dt;if(update.s>0.15){update.s=0;sync()}
 }
 function render(){
@@ -77,7 +77,8 @@ function render(){
   if(mode==='scene'&&scn==='chap'){drawChapter();return}
   ctx.save();ctx.translate(0,cy);if(zoom!==1){ctx.translate(zf.x,zf.y);ctx.scale(zoom,zoom);ctx.translate(-zf.x,-zf.y)}
   const shk=Math.max((rd&&rd.shake)||0,(scn==='yard'&&cb&&cb.shake)||0);if(shk>0)ctx.translate((Math.random()-.5)*shk*14,(Math.random()-.5)*shk*10);
-  if(scn==='road'){bg();forestOverlay();drawGate();drawClues();drawParty();drawPlayer();fxDraw()}
+  if(scn==='gate')drawGateScene();
+  else if(scn==='road'){drawForestBG();forestOverlay();drawClues();drawParty();drawPlayer();fxDraw()}
   else if(scn==='yard')drawYardScene();
   else if(scn==='s2')drawS2();
   else{bg();if(mode==='scene')drawSoldiers();drawPlayer();fxDraw();if(mode==='scene')drawMsg()}

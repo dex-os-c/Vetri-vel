@@ -44,134 +44,120 @@ const sfx=(()=>{
       if(rum){rum.g.gain.setTargetAtTime(on?lvl*.7:0,ac.currentTime,.6);if(!on){const r=rum;rum=null;setTimeout(()=>{try{r.s.stop();r.lfo.stop()}catch(e){}},2500)}}}
   }})();
 if(typeof addEventListener!=='undefined'){['pointerdown','keydown','touchstart'].forEach(e=>addEventListener(e,()=>sfx.resume(),{passive:true}))}
-/* ---------------- the five companions ---------------- */
+/* ---------------- the party: scout, archer, young soldier, shield-bearer, veteran + two pack horses ---------------- */
 let party=[],rd={};
+const PSPEC={scout:{walk:'scoutWalk',idle:'scoutIdle',run:'scoutRun'},young:{walk:'youngWalk',idle:'youngIdle',run:'youngRun'},
+  archer:{walk:'archer'},shield:{walk:'shield'},vet:{walk:'soldierB'},horse:{walk:'horse'}};
 function makeParty(){return [
-  {id:'scout',k:'scout',off:-120,x:0,ph:0,mv:false,ph2:0},{id:'archer',k:'archer',off:110,x:0,ph:0,mv:false},
-  {id:'young',k:'soldierA',off:190,x:0,ph:0.3,mv:false},{id:'shield',k:'shield',off:270,x:0,ph:0.6,mv:false},{id:'vet',k:'soldierB',off:350,x:0,ph:0.1,mv:false}]}
+  {id:'scout',off:-110,x:0,ph:0,mv:false},{id:'archer',off:125,x:0,ph:0,mv:false},{id:'young',off:200,x:0,ph:0.3,mv:false},
+  {id:'horse',off:295,x:0,ph:0.1,mv:false},{id:'shield',off:395,x:0,ph:0.6,mv:false},{id:'vet',off:470,x:0,ph:0.1,mv:false},{id:'horse',off:565,x:0,ph:0.5,mv:false}]}
 function updateParty(dt,follow){
-  party.forEach(s=>{if(!follow)return;const t=p.x-s.off,prev=s.x;s.x+=(t-s.x)*Math.min(1,2.6*dt);const d=Math.abs(s.x-prev);s.mv=d>0.05;
-    if(s.mv){const st=s.k==='scout'?ANIMS.msgRun.stride:ANIMS[s.k].stride;s.ph+=d/st;
-      const q=Math.floor(s.ph*2);if(q!==s.pf){s.pf=q;if(rnd()<0.35)puff(s.x-10,GROUND,1)}}})}
-function drawParty(){
-  for(const s of party){const dx=s.x-camX;if(dx<-200||dx>W+200)continue;shadow(dx,GROUND,40);
-    if(s.k==='scout'){if(s.mv)blit('msgRun',Math.floor((s.ph%1)*M.msgRun.n)%M.msgRun.n,dx,GROUND,s.face||1,ANIMS.msgRun.scale);else blit('msgStop',M.msgStop.n-1,dx,GROUND,s.face||1,ANIMS.msgStop.scale)}
-    else{const n=M[s.k].n;blit(s.k,s.mv?Math.floor((s.ph%1)*n)%n:Math.floor((s.ph%1)*n)%n,dx,GROUND,s.face||1,ANIMS[s.k].scale)}}
+  const running=!!(keys.ShiftLeft||keys.ShiftRight);
+  party.forEach(s=>{if(!follow)return;const t=p.x-s.off,prev=s.x;s.x+=(t-s.x)*Math.min(1,2.6*dt);const d=Math.abs(s.x-prev);s.mv=d>0.05;s.run=running&&p.moving;
+    if(s.mv){const sp=PSPEC[s.id],nm=(s.run&&sp.run)?sp.run:sp.walk;s.ph+=d/ANIMS[nm].stride;
+      const q=Math.floor(s.ph*2);if(q!==s.pf){s.pf=q;if(rnd()<0.3&&s.id!=='horse')puff(s.x-10,GROUND,1)}}})}
+function partyDraw(gy,mul,xshift,dim){
+  for(const s of party){const dx=s.x-camX+(xshift||0);if(dx<-260||dx>W+260)continue;shadow(dx,gy,s.id==='horse'?70:40);
+    const sp=PSPEC[s.id],face=s.face||1;let nm=sp.walk,f;
+    if(s.mv){nm=(s.run&&sp.run)?sp.run:sp.walk;const n=M[nm].n;f=Math.floor((s.ph%1)*n)%n}
+    else if(sp.idle){nm=sp.idle;f=pingpong(Math.floor(T*8+s.ph*20),M[nm].n)}
+    else{const n=M[nm].n;f=s.id==='horse'?0:Math.floor((s.ph%1)*n)%n}
+    blit(nm,f,dx,gy,face,ANIMS[nm].scale*(mul||1),dim)}
 }
-/* ---------------- Part 1: the gate closes, the party gathers ---------------- */
+function drawParty(){partyDraw(GROUND,1)}
+/* ---------------- Part 1: the palace gate ---------------- */
+const GATE_GY=452,GS=1.12;
+function beginGate(){
+  scn='gate';ph='in';T=0;mode='scene';p.x=470;p.y=GROUND;p.face=1;p.lock=true;p.weary=false;p.talk=false;p.hurt=-1;p.dead=-1;p.atk=false;p.jp=null;set('idle');
+  camX=0;zoom=zoomT=1;zf={x:W/2,y:GATE_GY-110};fade=1;fadeT=0;setBars(1);fx=[];dl.active=false;seed=9;cy=0;
+  party=makeParty();const xs={scout:905,young:850,shield:795,archer:740,vet:685};
+  party.forEach(s=>{if(xs[s.id]!=null)s.x=xs[s.id];s.face=-1;s.mv=false});party=party.filter(s=>s.id!=='horse');
+  rd={close:0,vx:470,said:false,smileK:0};sync();
+}
+function updateGate(dt){
+  fadeT=T<0.5?1:0;const V=ANIMS.walk;
+  if(ph==='in'){if(T>0.7&&rd.vx<585){rd.vx+=100*dt;p.ph+=100*dt/(V.stride*GS);set('walk');p.moving=true;if(rd.close===0&&rd.vx>520){sfx.door();rd.close=0.001}}
+    else if(rd.vx>=585){set('talk');p.moving=false}
+    if(rd.close>0&&rd.close<1)rd.close=Math.min(1,rd.close+dt/3.2);
+    if(rd.vx>=585&&rd.close>=1&&!rd.said){rd.said=true;say(PART1,()=>{go('gate','smile')})}}
+  else if(ph==='smile'){zoomT=1.55;zf.x+=((party[4].x)-zf.x)*Math.min(1,3*dt);zf.y+=((GATE_GY-100)-zf.y)*Math.min(1,3*dt);if(T>2.6){go('gate','leave')}}
+  else if(ph==='leave'){zoomT=1;zf.x=W/2;zf.y=GATE_GY-110;fadeT=1;if(T>1.2)beginRoad()}
+  party.forEach(s=>{s.face=ph==='leave'?1:-1});
+  barsT=1;if(ph==='in'&&T<0.7)barsT=1;
+}
+function drawGateScene(){
+  const G=BGI.gate;ctx.fillStyle='#1b1410';ctx.fillRect(-100,0,W+200,H+220);
+  ctx.drawImage(G,0,0,W,536);ctx.drawImage(G,0,490,W,46,0,536,W,200);
+  const fg=ctx.createLinearGradient(0,536,0,H+200);fg.addColorStop(0,'rgba(10,6,6,0)');fg.addColorStop(1,'rgba(10,6,6,.7)');ctx.fillStyle=fg;ctx.fillRect(0,536,W,200);
+  // the two doors swing shut behind the commander
+  const c=ease(rd.close||0),left=373,right=631,cx=486;
+  if(c>0){for(const side of[-1,1]){const x0=side<0?left+(cx-left)*c*0+ (436-left)*0:0;
+      const x1=side<0?436:541,x2=side<0?lerp(436,cx,c):lerp(541,cx,c);const xa=Math.min(x1,x2),xb=Math.max(x1,x2);
+      const g=ctx.createLinearGradient(xa,0,xb,0);g.addColorStop(0,'#2f1d14');g.addColorStop(1,'#3d261a');ctx.fillStyle=g;ctx.fillRect(xa,150,xb-xa,238);
+      ctx.fillStyle='#d4a443';for(let r=0;r<7;r++)for(let k=0;k<Math.max(1,Math.floor((xb-xa)/20));k++)ctx.fillRect(xa+8+k*20,166+r*30,4,4)}}
+  ctx.save();ctx.globalCompositeOperation='lighter';[[316,305],[701,305]].forEach((l,i)=>{const fl=.8+.2*Math.sin(T*9+i*2.1),r=64*fl;const g=ctx.createRadialGradient(l[0],l[1],2,l[0],l[1],r);g.addColorStop(0,'rgba(255,170,70,.45)');g.addColorStop(1,'rgba(255,120,30,0)');ctx.fillStyle=g;ctx.fillRect(l[0]-r,l[1]-r,2*r,2*r)});ctx.restore();
+  partyDraw(GATE_GY,GS);
+  const vx=rd.vx;shadow(vx,GATE_GY,58);
+  if(p.anim==='walk')blit('walk',Math.floor((p.ph%1)*M.walk.n)%M.walk.n,vx,GATE_GY,1,ANIMS.walk.scale*GS);else blit('talk',Math.floor(T*8)%M.talk.n,vx,GATE_GY,1,ANIMS.talk.scale*GS);
+}
 function beginRoad(){
-  scn='road';ph='gate';T=0;mode='scene';p.x=150;p.y=GROUND;p.face=1;p.lock=true;p.weary=false;p.talk=false;p.hurt=-1;p.dead=-1;p.atk=false;p.jp=null;set('idle');
-  camX=0;zoom=zoomT=1;zf={x:W/2,y:GROUND-110};fade=1;fadeT=0;setBars(1);fx=[];dl.active=false;seed=9;
-  party=makeParty();const px=[360,430,500,575,650];party.forEach((s,i)=>{s.x=px[[4,3,2,1,0][i]]});
-  party[0].x=700;party[1].x=585;party[2].x=515;party[3].x=445;party[4].x=380;      // scout leads, veteran guards the rear
-  rd={close:0,step:0,mood:0,pause:0,zoomK:null,blade:false,smile:0,bellT:0};sync();
+  scn='road';ph='walk';T=0;mode='scene';p.x=300;p.y=GROUND;p.face=1;p.lock=false;p.weary=false;p.talk=false;p.hurt=-1;p.dead=-1;p.atk=false;p.jp=null;set('idle');
+  camX=0;zoom=zoomT=1;zf={x:W/2,y:GROUND-110};fade=1;fadeT=0;barsT=0;bars=0;fx=[];dl.active=false;seed=9;cy=0;
+  party=makeParty();party.forEach(s=>{s.x=p.x-s.off;s.face=1;s.mv=false});
+  rd={step:0,mood:0,zoomK:null,blade:false,bellT:0,intro:true};sync();
 }
 function sceneEnd(){go('end','end');sync()}
 /* ---------------- Part 2: the forest road ---------------- */
-const RX={clue1:1450,clue2:2600,clue3:3750,bell:4300,end:4950};
+const RX={clue1:1250,clue2:2350,clue3:3450,bell:4050,end:4750};
 function roadSay(lines,after){p.lock=true;say(lines,()=>{p.lock=false;if(after)after()})}
 function updateRoad(dt){
-  fadeT=0;rd.mood=clamp((p.x-1200)/3200,0,1)*0.8+(rd.step>=4?0.2:0);
-  if(ph==='gate'){
-    if(T<0.4)fadeT=1;
-    const walkIn=p.x<780;
-    if(walkIn&&T>0.5){p.x+=105*dt;p.face=1;set('walk');p.ph+=105*dt/ANIMS.walk.stride;p.moving=true;if(Math.floor(p.ph*2)!==p._pf){p._pf=Math.floor(p.ph*2);puff(p.x-14,GROUND,1)}}
-    else if(!walkIn&&!p.lock0){p.lock0=true;set('idle')}
-    if(p.x>250&&rd.close<1){if(rd.close===0)sfx.door();rd.close=Math.min(1,rd.close+dt/3.4)}
-    if(!walkIn&&!dl.active&&!rd.said&&rd.close>=1){rd.said=true;p.talk=true;say(PART1,()=>{go('road','smile')})}
-    camX=0;
-  }else if(ph==='smile'){
-    rd.smile=T;zf.x+=((party[4].x-camX)-zf.x)*Math.min(1,3*dt);zoomT=1.5;
-    if(T>2.4){zoomT=1;go('road','walk');p.lock=false;p.talk=false;setBars(0);sync()}
-  }else if(ph==='walk'){
-    if(rd.step===0&&p.x>=RX.clue1){rd.step=1;roadSay(CLUE1,null);rd.zoomK=[RX.clue1+160,1.3]}
-    else if(rd.step===1&&p.x>=RX.clue2){rd.step=2;roadSay(CLUE2,null);rd.zoomK=[RX.clue2+200,1.25]}
-    else if(rd.step===2&&p.x>=RX.clue3){rd.step=3;roadSay(CLUE3,()=>{go('road','bell')});rd.zoomK=[RX.clue3+180,1.3]}
+  fadeT=0;rd.mood=rd.step>=4?1:clamp((p.x-700)/3300,0,1);
+  if(ph==='walk'){
+    if(rd.step===0&&p.x>=RX.clue1){rd.step=1;roadSay(CLUE1,null);rd.zoomK=[RX.clue1+150,1.3]}
+    else if(rd.step===1&&p.x>=RX.clue2){rd.step=2;roadSay(CLUE2,null);rd.zoomK=[RX.clue2+130,1.2]}
+    else if(rd.step===2&&p.x>=RX.clue3){rd.step=3;roadSay(CLUE3,()=>{go('road','bell')});rd.zoomK=[RX.clue3+150,1.3]}
     else if(rd.step===4&&p.x>=RX.end){go('road','toYard');p.lock=true}
     if(!dl.active)rd.zoomK=null;
-    // ambient: birds early, silence later
     rd.bt=(rd.bt||0)-dt;if(rd.bt<0){rd.bt=1.2+rnd()*3;const pr=1-rd.mood*1.4;if(rnd()<pr)sfx.bird();else if(rd.mood<0.8&&rnd()<.5)sfx.cricket()}
     if(rnd()<dt*(1.6-rd.mood))fx.push({k:'leaf',x:camX+W+20+rnd()*200,y:30+rnd()*260,vx:-(40+rnd()*50),vy:20+rnd()*30,r:2+rnd()*2.2,life:0,max:7,rot:rnd()*6})
   }else if(ph==='bell'){
-    // metallic sound, the party turns, the bell rings again
     p.lock=true;rd.bellT+=dt;
     if(!rd.b1&&rd.bellT>0.6){rd.b1=true;sfx.bell(.35);say(BELL1,()=>{rd.bellT=1.3})}
-    if(rd.b1&&!dl.active&&!rd.b2&&rd.bellT>=1.3){rd.b2=true;sfx.bell(.9);rd.shake=.6;party.forEach(s=>s.face=1);say(BELL2,()=>{rd.step=4;p.lock=false;rd.blade=true;p.weary=false;go('road','walk');rd.bellDone=true})}
-    if(rd.bellT<1.3)rd.bellT+=0;
+    if(rd.b1&&!dl.active&&!rd.b2&&rd.bellT>=1.3){rd.b2=true;sfx.bell(.9);rd.shake=.6;party.forEach(s=>s.face=1);say(BELL2,()=>{rd.step=4;p.lock=false;rd.blade=true;go('road','walk')})}
   }else if(ph==='toYard'){fadeT=1;if(T>1.2)beginYard()}
-  updateParty(dt,ph!=='gate'&&ph!=='smile');
-  // camera
-  let cx=ph==='gate'||ph==='smile'?0:p.x-W*0.4;
-  if(rd.zoomK&&dl.active)cx=rd.zoomK[0]-W/2;
+  if(!rd.blade&&p.anim==='idle')set('talk');
+  updateParty(dt,true);
+  let cx=p.x-W*0.4;if(rd.zoomK&&dl.active)cx=rd.zoomK[0]-W/2;
   camX+=(clamp(cx,0,RX.end+200)-camX)*Math.min(1,3*dt);
-  if(rd.zoomK&&dl.active){zoomT=rd.zoomK[1];zf.x=W/2;zf.y=GROUND-100}
-  else if(ph!=='smile')zoomT=1;
-  barsT=(['gate','smile'].includes(ph)||dl.active)?1:0;
-  rd.shake=Math.max(0,(rd.shake||0)-dt);
+  if(rd.zoomK&&dl.active){zoomT=rd.zoomK[1];zf.x=W/2;zf.y=GROUND-100}else zoomT=1;
+  barsT=dl.active?1:0;rd.shake=Math.max(0,(rd.shake||0)-dt);
 }
-/* ---------- scenery: gate, clues ---------- */
-function drawGate(){
-  const x=-camX;if(x<-380||x>W)return;ctx.save();ctx.translate(x,0);
-  const gx=20,gw=300,top=GROUND-330;
-  let g=ctx.createLinearGradient(0,top,0,GROUND);g.addColorStop(0,'#5a4636');g.addColorStop(1,'#33271f');ctx.fillStyle=g;ctx.fillRect(gx,top+60,gw,GROUND-top-60);
-  // tower tiers
-  for(let i=0;i<4;i++){const w=gw-30-i*46,h=34;ctx.fillStyle=i%2?'#4a3a2e':'#6b5442';ctx.fillRect(gx+(gw-w)/2,top+60-(i+1)*h,w,h-3);ctx.fillStyle='#d4a443';ctx.fillRect(gx+(gw-w)/2,top+60-(i+1)*h,w,3)}
-  ctx.fillStyle='#e0b24a';ctx.beginPath();ctx.arc(gx+gw/2,top-82,10,0,7);ctx.fill();
-  // doorway
-  const dx0=gx+60,dw=180,dh=GROUND-top-130;ctx.fillStyle='#0d0705';ctx.beginPath();ctx.moveTo(dx0,GROUND);ctx.lineTo(dx0,top+160);ctx.quadraticCurveTo(dx0,top+120,dx0+dw/2,top+110);ctx.quadraticCurveTo(dx0+dw,top+120,dx0+dw,top+160);ctx.lineTo(dx0+dw,GROUND);ctx.fill();
-  // doors (closing)
-  const w=lerp(18,dw/2,ease(rd.close||0));
-  for(const side of[-1,1]){const x0=side<0?dx0:dx0+dw-w;const dg=ctx.createLinearGradient(x0,0,x0+w,0);dg.addColorStop(0,'#4c2f1c');dg.addColorStop(1,'#33200f');ctx.fillStyle=dg;ctx.fillRect(x0,top+150,w,GROUND-top-150);
-    ctx.fillStyle='#d4a443';for(let r=0;r<8;r++)for(let c=0;c<Math.max(1,Math.floor(w/22));c++)ctx.fillRect(x0+8+c*22,top+170+r*24,5,5)}
-  // gold bands + base
-  ctx.fillStyle='#d4a443';ctx.fillRect(gx,top+60,gw,6);ctx.fillRect(gx,GROUND-14,gw,6);ctx.fillStyle='#2a1d15';ctx.fillRect(gx-10,GROUND-8,gw+20,8);
-  ctx.restore();
+/* ---------- scenery: painted forest (warm -> cold) + clue props ---------- */
+function drawForestBG(){
+  const A=BGI.forest_warm,Cc=BGI.forest_cold,pw=A.width,phh=A.height,y0=GROUND+10-Math.round(phh*0.81),i0=Math.floor(camX/pw);
+  const tile=(img,x)=>{ctx.drawImage(img,x,y0,pw+1,phh);
+    ctx.save();ctx.translate(0,y0);ctx.scale(1,-1);ctx.drawImage(img,x,0,pw+1,phh);ctx.restore();                  // canopy reflected upwards
+    ctx.save();ctx.translate(0,y0+phh);ctx.scale(1,-1);ctx.drawImage(img,x,-phh,pw+1,phh);ctx.restore()};          // grass reflected downwards
+  const plate=(img,alpha)=>{ctx.save();ctx.globalAlpha=alpha;
+    for(let i=i0;i*pw-camX<W+2;i++){const x=i*pw-camX;
+      if(i%2){ctx.save();ctx.translate(x+pw,0);ctx.scale(-1,1);tile(img,0);ctx.restore()}else tile(img,x)}
+    ctx.restore()};
+  plate(A,1);if(rd.mood>0.01)plate(Cc,clamp(rd.mood,0,1));
 }
 function drawClues(){
-  const sx=(x)=>x-camX;
-  // --- clue 1 : abandoned supplies and weapons ---
-  let x0=sx(RX.clue1);if(x0>-400&&x0<W+200){
-    const dark='#1c120d',wood='#6a4a2c',rim='rgba(255,190,110,.5)';
-    ctx.save();ctx.translate(x0,GROUND);
-    ctx.fillStyle=dark;ctx.beginPath();ctx.ellipse(120,2,170,10,0,0,7);ctx.fill();
-    const crate=(x,w,h,rot)=>{ctx.save();ctx.translate(x,0);ctx.rotate(rot);ctx.fillStyle=wood;ctx.fillRect(0,-h,w,h);ctx.strokeStyle='#2c1c10';ctx.lineWidth=3;ctx.strokeRect(0,-h,w,h);ctx.beginPath();ctx.moveTo(0,-h);ctx.lineTo(w,0);ctx.moveTo(w,-h);ctx.lineTo(0,0);ctx.stroke();ctx.strokeStyle=rim;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(1,-h+1);ctx.lineTo(w-1,-h+1);ctx.stroke();ctx.restore()};
-    crate(10,44,38,-0.12);crate(70,38,30,0.35);crate(200,46,40,0.05);
-    ctx.fillStyle='#8a7a52';ctx.beginPath();ctx.ellipse(150,-8,22,13,0.2,0,7);ctx.fill();ctx.fillStyle='#3a2a18';ctx.beginPath();ctx.ellipse(150,-8,15,7,0.2,0,7);ctx.fill();   // spilled pot
-    ctx.fillStyle='#c9a24a';for(let i=0;i<7;i++){ctx.beginPath();ctx.arc(172+i*9+Math.sin(i)*6,-3+Math.cos(i*2)*3,3,0,7);ctx.fill()}   // grain
-    const spear=(x,len,ang)=>{ctx.save();ctx.translate(x,-6);ctx.rotate(ang);ctx.strokeStyle='#4a3220';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(len,0);ctx.stroke();ctx.fillStyle='#b9c2cc';ctx.beginPath();ctx.moveTo(len,0);ctx.lineTo(len-18,-6);ctx.lineTo(len+16,0);ctx.lineTo(len-18,6);ctx.fill();ctx.restore()};
-    spear(-30,130,-0.06);spear(120,120,0.1);spear(250,110,-0.18);
-    ctx.fillStyle='#9aa4ae';ctx.beginPath();ctx.ellipse(250,-8,28,9,0.1,0,7);ctx.fill();ctx.strokeStyle='#d4a443';ctx.lineWidth=2;ctx.stroke();    // dropped shield
-    ctx.fillStyle='#6a1f27';ctx.fillRect(300,-12,70,10);ctx.fillStyle='#8a2a34';ctx.fillRect(300,-12,70,3);   // bedroll
-    ctx.restore()}
-  // --- clue 2 : the broken watchtower ---
-  x0=sx(RX.clue2);if(x0>-400&&x0<W+300){ctx.save();ctx.translate(x0,GROUND);
-    ctx.fillStyle='rgba(0,0,0,.35)';ctx.beginPath();ctx.ellipse(110,2,130,10,0,0,7);ctx.fill();
-    const lg=ctx.createLinearGradient(0,-330,0,0);lg.addColorStop(0,'#2a1d14');lg.addColorStop(1,'#4a3524');ctx.fillStyle=lg;
-    ctx.fillRect(40,-90,150,90);ctx.fillStyle='#5a4636';ctx.fillRect(40,-92,150,6);
-    for(const lx of[56,164]){ctx.save();ctx.translate(lx,-90);ctx.fillStyle='#3a2918';ctx.beginPath();ctx.moveTo(-9,0);ctx.lineTo(9,0);ctx.lineTo(6,-230);ctx.lineTo(-6,-230);ctx.fill();ctx.restore()}
-    ctx.strokeStyle='#3a2918';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(56,-100);ctx.lineTo(164,-210);ctx.moveTo(164,-100);ctx.lineTo(56,-210);ctx.stroke();
-    ctx.fillStyle='#2f2217';ctx.fillRect(34,-326,152,16);ctx.fillRect(40,-312,10,70);ctx.fillRect(170,-312,10,70);
-    ctx.fillStyle='#2a1d14';ctx.beginPath();ctx.moveTo(30,-326);ctx.lineTo(70,-372);ctx.lineTo(96,-340);ctx.lineTo(130,-366);ctx.lineTo(160,-334);ctx.lineTo(190,-326);ctx.fill();   // broken roof
-    ctx.strokeStyle='#8a7a62';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(110,-310);ctx.lineTo(110,-290);ctx.stroke();ctx.beginPath();ctx.arc(110,-286,4,0,7);ctx.stroke();   // empty bell hook
-    ctx.save();ctx.translate(210,-6);ctx.rotate(0.06);ctx.strokeStyle='#5a3d22';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(120,-4);ctx.moveTo(0,-20);ctx.lineTo(120,-24);ctx.stroke();for(let i=0;i<7;i++){ctx.beginPath();ctx.moveTo(i*18,0);ctx.lineTo(i*18,-20);ctx.stroke()}ctx.restore();   // ladder on the ground
-    ctx.restore()}
-  // --- clue 3 : the dead messenger horse ---
-  x0=sx(RX.clue3);if(x0>-500&&x0<W+300){ctx.save();ctx.translate(x0,GROUND);
-    ctx.strokeStyle='rgba(30,16,10,.55)';ctx.lineWidth=0;ctx.fillStyle='rgba(28,16,10,.5)';
-    for(let r=0;r<2;r++)for(let i=0;i<24;i++){const fx_=-260+i*17+(r?8:0);ctx.beginPath();ctx.ellipse(fx_,10+r*12,5,2.5,0,0,7);ctx.fill();ctx.beginPath();ctx.ellipse(fx_-6,10+r*12,2.5,2,0,0,7);ctx.fill()}   // tracks heading left
-    ctx.fillStyle='rgba(0,0,0,.4)';ctx.beginPath();ctx.ellipse(170,3,110,9,0,0,7);ctx.fill();
-    const hg=ctx.createLinearGradient(0,-60,0,0);hg.addColorStop(0,'#4a3322');hg.addColorStop(1,'#2a1c12');ctx.fillStyle=hg;
-    ctx.beginPath();ctx.ellipse(170,-26,86,30,0,0,7);ctx.fill();                               // body
-    ctx.beginPath();ctx.moveTo(240,-40);ctx.quadraticCurveTo(290,-52,318,-30);ctx.lineTo(312,-14);ctx.quadraticCurveTo(284,-30,236,-18);ctx.fill();   // neck + head
-    ctx.beginPath();ctx.ellipse(318,-24,16,9,-0.2,0,7);ctx.fill();
-    ctx.strokeStyle='#2a1c12';ctx.lineWidth=7;ctx.lineCap='round';for(const l of[[110,-8,70,6],[134,-6,96,10],[220,-8,262,4],[244,-6,288,12]]){ctx.beginPath();ctx.moveTo(l[0],l[1]);ctx.lineTo(l[2],l[3]);ctx.stroke()}
-    ctx.fillStyle='#6a1f27';ctx.fillRect(140,-58,56,14);ctx.fillStyle='#d4a443';ctx.fillRect(140,-58,56,3);   // saddle cloth
-    ctx.fillStyle='#caa862';ctx.save();ctx.translate(186,-44);ctx.rotate(-0.5);ctx.fillRect(-4,-30,8,30);ctx.restore();     // empty message tube
-    ctx.fillStyle='rgba(255,190,110,.35)';ctx.beginPath();ctx.ellipse(160,-52,60,5,0,0,7);ctx.fill();
-    ctx.restore()}
+  const sx=x=>x-camX,spr=(img,x,base,sc)=>{const w=img.width*sc,h=img.height*sc;if(x+w<-40||x>W+40)return false;ctx.drawImage(img,x,base-h,w,h);return true};
+  const B=GROUND+14;
+  // clue 1: abandoned supplies and weapons
+  let x=sx(RX.clue1);if(x>-400&&x<W+300){ctx.fillStyle='rgba(0,0,0,.25)';ctx.beginPath();ctx.ellipse(x+140,B,150,9,0,0,7);ctx.fill();spr(BGI.prop_supplies,x,B+6,1.0)}
+  // clue 2: broken watchtower
+  x=sx(RX.clue2);if(x>-400&&x<W+300){ctx.fillStyle='rgba(0,0,0,.28)';ctx.beginPath();ctx.ellipse(x+130,B,140,10,0,0,7);ctx.fill();spr(BGI.prop_tower,x,B+8,1.0)}
+  // clue 3: dead horse + footprints leading back toward the capital
+  x=sx(RX.clue3);if(x>-600&&x<W+300){
+    ctx.fillStyle='rgba(30,18,10,.5)';for(let r=0;r<2;r++)for(let i=0;i<26;i++){const fx_=x-300+i*17+(r?8:0);ctx.beginPath();ctx.ellipse(fx_,B+2+r*12,5,2.4,0,0,7);ctx.fill();ctx.beginPath();ctx.ellipse(fx_-6,B+2+r*12,2.4,2,0,0,7);ctx.fill()}
+    ctx.fillStyle='rgba(0,0,0,.3)';ctx.beginPath();ctx.ellipse(x+135,B,130,8,0,0,7);ctx.fill();spr(BGI.prop_deadhorse,x,B+4,1.0)}
 }
 function forestOverlay(){
-  const m=rd.mood||0;ctx.fillStyle='rgba(14,32,24,'+(0.16+0.3*m)+')';ctx.fillRect(0,0,W,H+200);
-  for(let i=0;i<3;i++){const y=GROUND-100-i*46,off=(T*(10+i*6)+camX*(.2+i*.1))%W;const g=ctx.createLinearGradient(0,y-40,0,y+40);g.addColorStop(0,'rgba(170,200,190,0)');g.addColorStop(.5,'rgba(170,200,190,'+(0.05+m*0.1)+')');g.addColorStop(1,'rgba(170,200,190,0)');ctx.fillStyle=g;
+  const m=rd.mood||0;ctx.fillStyle='rgba(10,24,22,'+(0.04+0.14*m)+')';ctx.fillRect(0,0,W,H+200);
+  for(let i=0;i<3;i++){const y=GROUND-70-i*46,off=(T*(10+i*6)+camX*(.2+i*.1))%W;const g=ctx.createLinearGradient(0,y-40,0,y+40);g.addColorStop(0,'rgba(190,215,210,0)');g.addColorStop(.5,'rgba(190,215,210,'+(0.03+m*0.1)+')');g.addColorStop(1,'rgba(190,215,210,0)');ctx.fillStyle=g;
     ctx.fillRect(-off,y-40,W,80);ctx.fillRect(W-off,y-40,W,80)}
 }

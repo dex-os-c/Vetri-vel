@@ -2,7 +2,7 @@ if(typeof CanvasRenderingContext2D!=='undefined'&&!CanvasRenderingContext2D.prot
 const cv=document.getElementById('c'),ctx=cv.getContext('2d');
 ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
 const W=960,H=540,GROUND=405,WORLD=6000;
-const M={"idle": {"CW": 198, "CH": 208, "AX": 119.60000000000001, "AY": 204.8, "cols": 7, "n": 28}, "walk": {"CW": 186, "CH": 254, "AX": 74.8, "AY": 250.4, "cols": 8, "n": 33}, "run": {"CW": 236, "CH": 197, "AX": 127.60000000000001, "AY": 192.4, "cols": 10, "n": 20}, "attack": {"CW": 272, "CH": 197, "AX": 158.4, "AY": 193.20000000000002, "cols": 7, "n": 34}, "weary": {"CW": 130, "CH": 223, "AX": 75.2, "AY": 219.60000000000002, "cols": 8, "n": 37}, "jump": {"CW": 182, "CH": 224, "AX": 90.4, "AY": 219.60000000000002, "cols": 8, "n": 31}, "hurt": {"CW": 261, "CH": 208, "AX": 158.0, "AY": 203.60000000000002, "cols": 8, "n": 24}, "talk": {"CW": 140, "CH": 236, "AX": 66.0, "AY": 231.60000000000002, "cols": 8, "n": 43}, "soldierA": {"CW": 182, "CH": 253, "AX": 94.0, "AY": 248.4, "cols": 8, "n": 30}, "soldierB": {"CW": 134, "CH": 214, "AX": 66.8, "AY": 210.4, "cols": 8, "n": 47}, "archer": {"CW": 177, "CH": 227, "AX": 81.19999999999999, "AY": 219.1, "cols": 8, "n": 32}, "shield": {"CW": 132, "CH": 217, "AX": 60.9, "AY": 210.7, "cols": 8, "n": 33}, "bearer": {"CW": 179, "CH": 252, "AX": 75.6, "AY": 244.29999999999998, "cols": 8, "n": 37}, "msgRun": {"CW": 174, "CH": 223, "AX": 113.2, "AY": 219.60000000000002, "cols": 5, "n": 10}, "msgStop": {"CW": 163, "CH": 238, "AX": 87.2, "AY": 234.0, "cols": 5, "n": 9}, "msgAnn": {"CW": 154, "CH": 248, "AX": 100.0, "AY": 243.60000000000002, "cols": 7, "n": 21}, "fall": {"CW": 327, "CH": 292, "AX": 150.8, "AY": 253.60000000000002, "cols": 9, "n": 45}, "kidle": {"CW": 180, "CH": 295, "AX": 100.80000000000001, "AY": 285.6, "cols": 8, "n": 37}, "kspeak": {"CW": 187, "CH": 301, "AX": 104.0, "AY": 290.40000000000003, "cols": 8, "n": 44}, "kread": {"CW": 172, "CH": 292, "AX": 92.80000000000001, "AY": 284.0, "cols": 8, "n": 57}};
+const M={"walk": {"CW": 186, "CH": 254, "AX": 74.8, "AY": 250.4, "cols": 8, "n": 33}, "run": {"CW": 236, "CH": 197, "AX": 127.60000000000001, "AY": 192.4, "cols": 10, "n": 20}, "idle": {"CW": 198, "CH": 208, "AX": 119.60000000000001, "AY": 204.8, "cols": 7, "n": 28}, "attack": {"CW": 272, "CH": 197, "AX": 158.4, "AY": 193.20000000000002, "cols": 7, "n": 34}, "weary": {"CW": 130, "CH": 223, "AX": 75.2, "AY": 219.60000000000002, "cols": 8, "n": 37}, "jump": {"CW": 182, "CH": 224, "AX": 90.4, "AY": 219.60000000000002, "cols": 8, "n": 31}, "hurt": {"CW": 261, "CH": 208, "AX": 158.0, "AY": 203.60000000000002, "cols": 8, "n": 24}, "talk": {"CW": 140, "CH": 236, "AX": 66.0, "AY": 231.60000000000002, "cols": 8, "n": 43}, "soldierA": {"CW": 182, "CH": 253, "AX": 94.0, "AY": 248.4, "cols": 8, "n": 30}, "soldierB": {"CW": 134, "CH": 214, "AX": 66.8, "AY": 210.4, "cols": 8, "n": 47}, "msgRun": {"CW": 174, "CH": 223, "AX": 113.2, "AY": 219.60000000000002, "cols": 5, "n": 10}, "msgStop": {"CW": 163, "CH": 238, "AX": 87.2, "AY": 234.0, "cols": 5, "n": 9}, "msgAnn": {"CW": 154, "CH": 248, "AX": 100.0, "AY": 243.60000000000002, "cols": 7, "n": 21}, "fall": {"CW": 327, "CH": 292, "AX": 150.8, "AY": 253.60000000000002, "cols": 9, "n": 45}, "archer": {"CW": 177, "CH": 227, "AX": 81.19999999999999, "AY": 219.1, "cols": 8, "n": 32}, "shield": {"CW": 132, "CH": 217, "AX": 60.9, "AY": 210.7, "cols": 8, "n": 33}, "bearer": {"CW": 179, "CH": 252, "AX": 75.6, "AY": 244.29999999999998, "cols": 8, "n": 37}, "kidle": {"CW": 180, "CH": 295, "AX": 100.80000000000001, "AY": 285.6, "cols": 8, "n": 37}, "kspeak": {"CW": 187, "CH": 301, "AX": 104.0, "AY": 290.40000000000003, "cols": 8, "n": 44}, "kread": {"CW": 172, "CH": 292, "AX": 92.80000000000001, "AY": 284.0, "cols": 8, "n": 57}, "scoutWalk": {"CW": 199, "CH": 239, "AX": 93.60000000000001, "AY": 231.20000000000002, "cols": 8, "n": 33}, "scoutIdle": {"CW": 196, "CH": 236, "AX": 84.0, "AY": 227.20000000000002, "cols": 8, "n": 33}, "scoutRun": {"CW": 219, "CH": 221, "AX": 124.80000000000001, "AY": 213.60000000000002, "cols": 8, "n": 21}, "youngWalk": {"CW": 215, "CH": 252, "AX": 118.4, "AY": 244.0, "cols": 8, "n": 36}, "youngIdle": {"CW": 205, "CH": 250, "AX": 104.80000000000001, "AY": 242.4, "cols": 8, "n": 33}, "youngRun": {"CW": 249, "CH": 236, "AX": 124.80000000000001, "AY": 228.0, "cols": 6, "n": 12}, "horse": {"CW": 293, "CH": 232, "AX": 147.20000000000002, "AY": 224.8, "cols": 5, "n": 15}, "gkIdle": {"CW": 144, "CH": 223, "AX": 76.0, "AY": 215.20000000000002, "cols": 8, "n": 24}, "gkWalk": {"CW": 163, "CH": 221, "AX": 76.80000000000001, "AY": 213.60000000000002, "cols": 8, "n": 39}, "gkLight": {"CW": 375, "CH": 218, "AX": 214.4, "AY": 210.4, "cols": 8, "n": 35}, "gkHeavy": {"CW": 311, "CH": 277, "AX": 155.20000000000002, "AY": 268.0, "cols": 8, "n": 41}, "gkFall": {"CW": 239, "CH": 229, "AX": 113.60000000000001, "AY": 220.0, "cols": 8, "n": 35}};
 /* =====================================================================================
    STORY + DIALOGUE  (edit the text here — everything on screen comes from these lists)
    ===================================================================================== */
@@ -41,13 +41,18 @@ const ANIMS={
   soldierA:{sheet:'soldierA',stride:150,scale:0.58},soldierB:{sheet:'soldierB',stride:190,scale:0.62},
   archer:{sheet:'archer',stride:150,scale:0.64},shield:{sheet:'shield',stride:150,scale:0.66},bearer:{sheet:'bearer',stride:155,scale:0.6},
   kidle:{sheet:'kidle',fps:8,loop:'pingpong',scale:0.66},kspeak:{sheet:'kspeak',fps:8,loop:'pingpong',scale:0.66},kread:{sheet:'kread',fps:12,loop:false,scale:0.66},
+  scoutWalk:{sheet:'scoutWalk',stride:170,scale:0.66},scoutIdle:{sheet:'scoutIdle',scale:0.66},scoutRun:{sheet:'scoutRun',stride:250,scale:0.66},
+  youngWalk:{sheet:'youngWalk',stride:187,scale:0.64},youngIdle:{sheet:'youngIdle',scale:0.64},youngRun:{sheet:'youngRun',stride:150,scale:0.64},
+  horse:{sheet:'horse',stride:140,scale:0.56},
+  gkIdle:{sheet:'gkIdle',scale:0.66},gkWalk:{sheet:'gkWalk',stride:105,scale:0.66},gkLight:{sheet:'gkLight',scale:0.66},gkHeavy:{sheet:'gkHeavy',scale:0.66},gkFall:{sheet:'gkFall',scale:0.66},
   msgRun:{sheet:'msgRun',stride:175,scale:0.6},msgStop:{sheet:'msgStop',fps:12,scale:0.6},msgAnn:{sheet:'msgAnn',fps:8,loop:'pingpong',scale:0.6,native:-1}
 };
 const SHEETS=Object.keys(M);
-const IMG={},BGI={};let loaded=0;const BGN=['temple','banyan','road','court','pillars','scroll'];const total=SHEETS.length+BGN.length;
+const IMG={},BGI={};let loaded=0;const BGN=['temple','banyan','road','court','pillars','scroll','forest_warm','forest_cold','yard','yardglow','gate'],PRN=['supplies','tower','deadhorse'];const total=SHEETS.length+BGN.length+PRN.length;
 const done=()=>{if(++loaded==total)requestAnimationFrame(loop)};
 SHEETS.forEach(n=>{const i=new Image();i.onload=done;i.src=(window.ASSETS&&window.ASSETS[n])||('assets/'+n+'.webp');IMG[n]=i});
 BGN.forEach(n=>{const i=new Image();i.onload=done;i.src=(window.ASSETS&&window.ASSETS['bg_'+n])||('assets/bg_'+n+'.webp');BGI[n]=i});
+PRN.forEach(n=>{const i=new Image();i.onload=done;i.src=(window.ASSETS&&window.ASSETS['prop_'+n])||('assets/prop_'+n+'.webp');BGI['prop_'+n]=i});
 const keys={};
 const lerp=(a,b,t)=>a+(b-a)*t,clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),ease=t=>t*t*(3-2*t);
 let seed=5;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
@@ -160,7 +165,8 @@ function skipScene(){
   if(scn==='intro'){go('s1','walk');fadeT=0}
   else if(scn==='s1'){p.lock=true;beginCourt()}
   else if(scn==='s2'){go('title','show');fade=1;fadeT=1}
-  else if(scn==='title'){beginRoad()}
+  else if(scn==='title'){beginGate()}
+  else if(scn==='gate'){beginRoad()}
   else if(scn==='road'){beginYard()}
   else if(scn==='yard'){go('chap','card');fade=1;fadeT=1}
   else if(scn==='chap'){go('chap','end')}
@@ -302,135 +308,121 @@ const sfx=(()=>{
       if(rum){rum.g.gain.setTargetAtTime(on?lvl*.7:0,ac.currentTime,.6);if(!on){const r=rum;rum=null;setTimeout(()=>{try{r.s.stop();r.lfo.stop()}catch(e){}},2500)}}}
   }})();
 if(typeof addEventListener!=='undefined'){['pointerdown','keydown','touchstart'].forEach(e=>addEventListener(e,()=>sfx.resume(),{passive:true}))}
-/* ---------------- the five companions ---------------- */
+/* ---------------- the party: scout, archer, young soldier, shield-bearer, veteran + two pack horses ---------------- */
 let party=[],rd={};
+const PSPEC={scout:{walk:'scoutWalk',idle:'scoutIdle',run:'scoutRun'},young:{walk:'youngWalk',idle:'youngIdle',run:'youngRun'},
+  archer:{walk:'archer'},shield:{walk:'shield'},vet:{walk:'soldierB'},horse:{walk:'horse'}};
 function makeParty(){return [
-  {id:'scout',k:'scout',off:-120,x:0,ph:0,mv:false,ph2:0},{id:'archer',k:'archer',off:110,x:0,ph:0,mv:false},
-  {id:'young',k:'soldierA',off:190,x:0,ph:0.3,mv:false},{id:'shield',k:'shield',off:270,x:0,ph:0.6,mv:false},{id:'vet',k:'soldierB',off:350,x:0,ph:0.1,mv:false}]}
+  {id:'scout',off:-110,x:0,ph:0,mv:false},{id:'archer',off:125,x:0,ph:0,mv:false},{id:'young',off:200,x:0,ph:0.3,mv:false},
+  {id:'horse',off:295,x:0,ph:0.1,mv:false},{id:'shield',off:395,x:0,ph:0.6,mv:false},{id:'vet',off:470,x:0,ph:0.1,mv:false},{id:'horse',off:565,x:0,ph:0.5,mv:false}]}
 function updateParty(dt,follow){
-  party.forEach(s=>{if(!follow)return;const t=p.x-s.off,prev=s.x;s.x+=(t-s.x)*Math.min(1,2.6*dt);const d=Math.abs(s.x-prev);s.mv=d>0.05;
-    if(s.mv){const st=s.k==='scout'?ANIMS.msgRun.stride:ANIMS[s.k].stride;s.ph+=d/st;
-      const q=Math.floor(s.ph*2);if(q!==s.pf){s.pf=q;if(rnd()<0.35)puff(s.x-10,GROUND,1)}}})}
-function drawParty(){
-  for(const s of party){const dx=s.x-camX;if(dx<-200||dx>W+200)continue;shadow(dx,GROUND,40);
-    if(s.k==='scout'){if(s.mv)blit('msgRun',Math.floor((s.ph%1)*M.msgRun.n)%M.msgRun.n,dx,GROUND,s.face||1,ANIMS.msgRun.scale);else blit('msgStop',M.msgStop.n-1,dx,GROUND,s.face||1,ANIMS.msgStop.scale)}
-    else{const n=M[s.k].n;blit(s.k,s.mv?Math.floor((s.ph%1)*n)%n:Math.floor((s.ph%1)*n)%n,dx,GROUND,s.face||1,ANIMS[s.k].scale)}}
+  const running=!!(keys.ShiftLeft||keys.ShiftRight);
+  party.forEach(s=>{if(!follow)return;const t=p.x-s.off,prev=s.x;s.x+=(t-s.x)*Math.min(1,2.6*dt);const d=Math.abs(s.x-prev);s.mv=d>0.05;s.run=running&&p.moving;
+    if(s.mv){const sp=PSPEC[s.id],nm=(s.run&&sp.run)?sp.run:sp.walk;s.ph+=d/ANIMS[nm].stride;
+      const q=Math.floor(s.ph*2);if(q!==s.pf){s.pf=q;if(rnd()<0.3&&s.id!=='horse')puff(s.x-10,GROUND,1)}}})}
+function partyDraw(gy,mul,xshift,dim){
+  for(const s of party){const dx=s.x-camX+(xshift||0);if(dx<-260||dx>W+260)continue;shadow(dx,gy,s.id==='horse'?70:40);
+    const sp=PSPEC[s.id],face=s.face||1;let nm=sp.walk,f;
+    if(s.mv){nm=(s.run&&sp.run)?sp.run:sp.walk;const n=M[nm].n;f=Math.floor((s.ph%1)*n)%n}
+    else if(sp.idle){nm=sp.idle;f=pingpong(Math.floor(T*8+s.ph*20),M[nm].n)}
+    else{const n=M[nm].n;f=s.id==='horse'?0:Math.floor((s.ph%1)*n)%n}
+    blit(nm,f,dx,gy,face,ANIMS[nm].scale*(mul||1),dim)}
 }
-/* ---------------- Part 1: the gate closes, the party gathers ---------------- */
+function drawParty(){partyDraw(GROUND,1)}
+/* ---------------- Part 1: the palace gate ---------------- */
+const GATE_GY=452,GS=1.12;
+function beginGate(){
+  scn='gate';ph='in';T=0;mode='scene';p.x=470;p.y=GROUND;p.face=1;p.lock=true;p.weary=false;p.talk=false;p.hurt=-1;p.dead=-1;p.atk=false;p.jp=null;set('idle');
+  camX=0;zoom=zoomT=1;zf={x:W/2,y:GATE_GY-110};fade=1;fadeT=0;setBars(1);fx=[];dl.active=false;seed=9;cy=0;
+  party=makeParty();const xs={scout:905,young:850,shield:795,archer:740,vet:685};
+  party.forEach(s=>{if(xs[s.id]!=null)s.x=xs[s.id];s.face=-1;s.mv=false});party=party.filter(s=>s.id!=='horse');
+  rd={close:0,vx:470,said:false,smileK:0};sync();
+}
+function updateGate(dt){
+  fadeT=T<0.5?1:0;const V=ANIMS.walk;
+  if(ph==='in'){if(T>0.7&&rd.vx<585){rd.vx+=100*dt;p.ph+=100*dt/(V.stride*GS);set('walk');p.moving=true;if(rd.close===0&&rd.vx>520){sfx.door();rd.close=0.001}}
+    else if(rd.vx>=585){set('talk');p.moving=false}
+    if(rd.close>0&&rd.close<1)rd.close=Math.min(1,rd.close+dt/3.2);
+    if(rd.vx>=585&&rd.close>=1&&!rd.said){rd.said=true;say(PART1,()=>{go('gate','smile')})}}
+  else if(ph==='smile'){zoomT=1.55;zf.x+=((party[4].x)-zf.x)*Math.min(1,3*dt);zf.y+=((GATE_GY-100)-zf.y)*Math.min(1,3*dt);if(T>2.6){go('gate','leave')}}
+  else if(ph==='leave'){zoomT=1;zf.x=W/2;zf.y=GATE_GY-110;fadeT=1;if(T>1.2)beginRoad()}
+  party.forEach(s=>{s.face=ph==='leave'?1:-1});
+  barsT=1;if(ph==='in'&&T<0.7)barsT=1;
+}
+function drawGateScene(){
+  const G=BGI.gate;ctx.fillStyle='#1b1410';ctx.fillRect(-100,0,W+200,H+220);
+  ctx.drawImage(G,0,0,W,536);ctx.drawImage(G,0,490,W,46,0,536,W,200);
+  const fg=ctx.createLinearGradient(0,536,0,H+200);fg.addColorStop(0,'rgba(10,6,6,0)');fg.addColorStop(1,'rgba(10,6,6,.7)');ctx.fillStyle=fg;ctx.fillRect(0,536,W,200);
+  // the two doors swing shut behind the commander
+  const c=ease(rd.close||0),left=373,right=631,cx=486;
+  if(c>0){for(const side of[-1,1]){const x0=side<0?left+(cx-left)*c*0+ (436-left)*0:0;
+      const x1=side<0?436:541,x2=side<0?lerp(436,cx,c):lerp(541,cx,c);const xa=Math.min(x1,x2),xb=Math.max(x1,x2);
+      const g=ctx.createLinearGradient(xa,0,xb,0);g.addColorStop(0,'#2f1d14');g.addColorStop(1,'#3d261a');ctx.fillStyle=g;ctx.fillRect(xa,150,xb-xa,238);
+      ctx.fillStyle='#d4a443';for(let r=0;r<7;r++)for(let k=0;k<Math.max(1,Math.floor((xb-xa)/20));k++)ctx.fillRect(xa+8+k*20,166+r*30,4,4)}}
+  ctx.save();ctx.globalCompositeOperation='lighter';[[316,305],[701,305]].forEach((l,i)=>{const fl=.8+.2*Math.sin(T*9+i*2.1),r=64*fl;const g=ctx.createRadialGradient(l[0],l[1],2,l[0],l[1],r);g.addColorStop(0,'rgba(255,170,70,.45)');g.addColorStop(1,'rgba(255,120,30,0)');ctx.fillStyle=g;ctx.fillRect(l[0]-r,l[1]-r,2*r,2*r)});ctx.restore();
+  partyDraw(GATE_GY,GS);
+  const vx=rd.vx;shadow(vx,GATE_GY,58);
+  if(p.anim==='walk')blit('walk',Math.floor((p.ph%1)*M.walk.n)%M.walk.n,vx,GATE_GY,1,ANIMS.walk.scale*GS);else blit('talk',Math.floor(T*8)%M.talk.n,vx,GATE_GY,1,ANIMS.talk.scale*GS);
+}
 function beginRoad(){
-  scn='road';ph='gate';T=0;mode='scene';p.x=150;p.y=GROUND;p.face=1;p.lock=true;p.weary=false;p.talk=false;p.hurt=-1;p.dead=-1;p.atk=false;p.jp=null;set('idle');
-  camX=0;zoom=zoomT=1;zf={x:W/2,y:GROUND-110};fade=1;fadeT=0;setBars(1);fx=[];dl.active=false;seed=9;
-  party=makeParty();const px=[360,430,500,575,650];party.forEach((s,i)=>{s.x=px[[4,3,2,1,0][i]]});
-  party[0].x=700;party[1].x=585;party[2].x=515;party[3].x=445;party[4].x=380;      // scout leads, veteran guards the rear
-  rd={close:0,step:0,mood:0,pause:0,zoomK:null,blade:false,smile:0,bellT:0};sync();
+  scn='road';ph='walk';T=0;mode='scene';p.x=300;p.y=GROUND;p.face=1;p.lock=false;p.weary=false;p.talk=false;p.hurt=-1;p.dead=-1;p.atk=false;p.jp=null;set('idle');
+  camX=0;zoom=zoomT=1;zf={x:W/2,y:GROUND-110};fade=1;fadeT=0;barsT=0;bars=0;fx=[];dl.active=false;seed=9;cy=0;
+  party=makeParty();party.forEach(s=>{s.x=p.x-s.off;s.face=1;s.mv=false});
+  rd={step:0,mood:0,zoomK:null,blade:false,bellT:0,intro:true};sync();
 }
 function sceneEnd(){go('end','end');sync()}
 /* ---------------- Part 2: the forest road ---------------- */
-const RX={clue1:1450,clue2:2600,clue3:3750,bell:4300,end:4950};
+const RX={clue1:1250,clue2:2350,clue3:3450,bell:4050,end:4750};
 function roadSay(lines,after){p.lock=true;say(lines,()=>{p.lock=false;if(after)after()})}
 function updateRoad(dt){
-  fadeT=0;rd.mood=clamp((p.x-1200)/3200,0,1)*0.8+(rd.step>=4?0.2:0);
-  if(ph==='gate'){
-    if(T<0.4)fadeT=1;
-    const walkIn=p.x<780;
-    if(walkIn&&T>0.5){p.x+=105*dt;p.face=1;set('walk');p.ph+=105*dt/ANIMS.walk.stride;p.moving=true;if(Math.floor(p.ph*2)!==p._pf){p._pf=Math.floor(p.ph*2);puff(p.x-14,GROUND,1)}}
-    else if(!walkIn&&!p.lock0){p.lock0=true;set('idle')}
-    if(p.x>250&&rd.close<1){if(rd.close===0)sfx.door();rd.close=Math.min(1,rd.close+dt/3.4)}
-    if(!walkIn&&!dl.active&&!rd.said&&rd.close>=1){rd.said=true;p.talk=true;say(PART1,()=>{go('road','smile')})}
-    camX=0;
-  }else if(ph==='smile'){
-    rd.smile=T;zf.x+=((party[4].x-camX)-zf.x)*Math.min(1,3*dt);zoomT=1.5;
-    if(T>2.4){zoomT=1;go('road','walk');p.lock=false;p.talk=false;setBars(0);sync()}
-  }else if(ph==='walk'){
-    if(rd.step===0&&p.x>=RX.clue1){rd.step=1;roadSay(CLUE1,null);rd.zoomK=[RX.clue1+160,1.3]}
-    else if(rd.step===1&&p.x>=RX.clue2){rd.step=2;roadSay(CLUE2,null);rd.zoomK=[RX.clue2+200,1.25]}
-    else if(rd.step===2&&p.x>=RX.clue3){rd.step=3;roadSay(CLUE3,()=>{go('road','bell')});rd.zoomK=[RX.clue3+180,1.3]}
+  fadeT=0;rd.mood=rd.step>=4?1:clamp((p.x-700)/3300,0,1);
+  if(ph==='walk'){
+    if(rd.step===0&&p.x>=RX.clue1){rd.step=1;roadSay(CLUE1,null);rd.zoomK=[RX.clue1+150,1.3]}
+    else if(rd.step===1&&p.x>=RX.clue2){rd.step=2;roadSay(CLUE2,null);rd.zoomK=[RX.clue2+130,1.2]}
+    else if(rd.step===2&&p.x>=RX.clue3){rd.step=3;roadSay(CLUE3,()=>{go('road','bell')});rd.zoomK=[RX.clue3+150,1.3]}
     else if(rd.step===4&&p.x>=RX.end){go('road','toYard');p.lock=true}
     if(!dl.active)rd.zoomK=null;
-    // ambient: birds early, silence later
     rd.bt=(rd.bt||0)-dt;if(rd.bt<0){rd.bt=1.2+rnd()*3;const pr=1-rd.mood*1.4;if(rnd()<pr)sfx.bird();else if(rd.mood<0.8&&rnd()<.5)sfx.cricket()}
     if(rnd()<dt*(1.6-rd.mood))fx.push({k:'leaf',x:camX+W+20+rnd()*200,y:30+rnd()*260,vx:-(40+rnd()*50),vy:20+rnd()*30,r:2+rnd()*2.2,life:0,max:7,rot:rnd()*6})
   }else if(ph==='bell'){
-    // metallic sound, the party turns, the bell rings again
     p.lock=true;rd.bellT+=dt;
     if(!rd.b1&&rd.bellT>0.6){rd.b1=true;sfx.bell(.35);say(BELL1,()=>{rd.bellT=1.3})}
-    if(rd.b1&&!dl.active&&!rd.b2&&rd.bellT>=1.3){rd.b2=true;sfx.bell(.9);rd.shake=.6;party.forEach(s=>s.face=1);say(BELL2,()=>{rd.step=4;p.lock=false;rd.blade=true;p.weary=false;go('road','walk');rd.bellDone=true})}
-    if(rd.bellT<1.3)rd.bellT+=0;
+    if(rd.b1&&!dl.active&&!rd.b2&&rd.bellT>=1.3){rd.b2=true;sfx.bell(.9);rd.shake=.6;party.forEach(s=>s.face=1);say(BELL2,()=>{rd.step=4;p.lock=false;rd.blade=true;go('road','walk')})}
   }else if(ph==='toYard'){fadeT=1;if(T>1.2)beginYard()}
-  updateParty(dt,ph!=='gate'&&ph!=='smile');
-  // camera
-  let cx=ph==='gate'||ph==='smile'?0:p.x-W*0.4;
-  if(rd.zoomK&&dl.active)cx=rd.zoomK[0]-W/2;
+  if(!rd.blade&&p.anim==='idle')set('talk');
+  updateParty(dt,true);
+  let cx=p.x-W*0.4;if(rd.zoomK&&dl.active)cx=rd.zoomK[0]-W/2;
   camX+=(clamp(cx,0,RX.end+200)-camX)*Math.min(1,3*dt);
-  if(rd.zoomK&&dl.active){zoomT=rd.zoomK[1];zf.x=W/2;zf.y=GROUND-100}
-  else if(ph!=='smile')zoomT=1;
-  barsT=(['gate','smile'].includes(ph)||dl.active)?1:0;
-  rd.shake=Math.max(0,(rd.shake||0)-dt);
+  if(rd.zoomK&&dl.active){zoomT=rd.zoomK[1];zf.x=W/2;zf.y=GROUND-100}else zoomT=1;
+  barsT=dl.active?1:0;rd.shake=Math.max(0,(rd.shake||0)-dt);
 }
-/* ---------- scenery: gate, clues ---------- */
-function drawGate(){
-  const x=-camX;if(x<-380||x>W)return;ctx.save();ctx.translate(x,0);
-  const gx=20,gw=300,top=GROUND-330;
-  let g=ctx.createLinearGradient(0,top,0,GROUND);g.addColorStop(0,'#5a4636');g.addColorStop(1,'#33271f');ctx.fillStyle=g;ctx.fillRect(gx,top+60,gw,GROUND-top-60);
-  // tower tiers
-  for(let i=0;i<4;i++){const w=gw-30-i*46,h=34;ctx.fillStyle=i%2?'#4a3a2e':'#6b5442';ctx.fillRect(gx+(gw-w)/2,top+60-(i+1)*h,w,h-3);ctx.fillStyle='#d4a443';ctx.fillRect(gx+(gw-w)/2,top+60-(i+1)*h,w,3)}
-  ctx.fillStyle='#e0b24a';ctx.beginPath();ctx.arc(gx+gw/2,top-82,10,0,7);ctx.fill();
-  // doorway
-  const dx0=gx+60,dw=180,dh=GROUND-top-130;ctx.fillStyle='#0d0705';ctx.beginPath();ctx.moveTo(dx0,GROUND);ctx.lineTo(dx0,top+160);ctx.quadraticCurveTo(dx0,top+120,dx0+dw/2,top+110);ctx.quadraticCurveTo(dx0+dw,top+120,dx0+dw,top+160);ctx.lineTo(dx0+dw,GROUND);ctx.fill();
-  // doors (closing)
-  const w=lerp(18,dw/2,ease(rd.close||0));
-  for(const side of[-1,1]){const x0=side<0?dx0:dx0+dw-w;const dg=ctx.createLinearGradient(x0,0,x0+w,0);dg.addColorStop(0,'#4c2f1c');dg.addColorStop(1,'#33200f');ctx.fillStyle=dg;ctx.fillRect(x0,top+150,w,GROUND-top-150);
-    ctx.fillStyle='#d4a443';for(let r=0;r<8;r++)for(let c=0;c<Math.max(1,Math.floor(w/22));c++)ctx.fillRect(x0+8+c*22,top+170+r*24,5,5)}
-  // gold bands + base
-  ctx.fillStyle='#d4a443';ctx.fillRect(gx,top+60,gw,6);ctx.fillRect(gx,GROUND-14,gw,6);ctx.fillStyle='#2a1d15';ctx.fillRect(gx-10,GROUND-8,gw+20,8);
-  ctx.restore();
+/* ---------- scenery: painted forest (warm -> cold) + clue props ---------- */
+function drawForestBG(){
+  const A=BGI.forest_warm,Cc=BGI.forest_cold,pw=A.width,phh=A.height,y0=GROUND+10-Math.round(phh*0.81),i0=Math.floor(camX/pw);
+  const tile=(img,x)=>{ctx.drawImage(img,x,y0,pw+1,phh);
+    ctx.save();ctx.translate(0,y0);ctx.scale(1,-1);ctx.drawImage(img,x,0,pw+1,phh);ctx.restore();                  // canopy reflected upwards
+    ctx.save();ctx.translate(0,y0+phh);ctx.scale(1,-1);ctx.drawImage(img,x,-phh,pw+1,phh);ctx.restore()};          // grass reflected downwards
+  const plate=(img,alpha)=>{ctx.save();ctx.globalAlpha=alpha;
+    for(let i=i0;i*pw-camX<W+2;i++){const x=i*pw-camX;
+      if(i%2){ctx.save();ctx.translate(x+pw,0);ctx.scale(-1,1);tile(img,0);ctx.restore()}else tile(img,x)}
+    ctx.restore()};
+  plate(A,1);if(rd.mood>0.01)plate(Cc,clamp(rd.mood,0,1));
 }
 function drawClues(){
-  const sx=(x)=>x-camX;
-  // --- clue 1 : abandoned supplies and weapons ---
-  let x0=sx(RX.clue1);if(x0>-400&&x0<W+200){
-    const dark='#1c120d',wood='#6a4a2c',rim='rgba(255,190,110,.5)';
-    ctx.save();ctx.translate(x0,GROUND);
-    ctx.fillStyle=dark;ctx.beginPath();ctx.ellipse(120,2,170,10,0,0,7);ctx.fill();
-    const crate=(x,w,h,rot)=>{ctx.save();ctx.translate(x,0);ctx.rotate(rot);ctx.fillStyle=wood;ctx.fillRect(0,-h,w,h);ctx.strokeStyle='#2c1c10';ctx.lineWidth=3;ctx.strokeRect(0,-h,w,h);ctx.beginPath();ctx.moveTo(0,-h);ctx.lineTo(w,0);ctx.moveTo(w,-h);ctx.lineTo(0,0);ctx.stroke();ctx.strokeStyle=rim;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(1,-h+1);ctx.lineTo(w-1,-h+1);ctx.stroke();ctx.restore()};
-    crate(10,44,38,-0.12);crate(70,38,30,0.35);crate(200,46,40,0.05);
-    ctx.fillStyle='#8a7a52';ctx.beginPath();ctx.ellipse(150,-8,22,13,0.2,0,7);ctx.fill();ctx.fillStyle='#3a2a18';ctx.beginPath();ctx.ellipse(150,-8,15,7,0.2,0,7);ctx.fill();   // spilled pot
-    ctx.fillStyle='#c9a24a';for(let i=0;i<7;i++){ctx.beginPath();ctx.arc(172+i*9+Math.sin(i)*6,-3+Math.cos(i*2)*3,3,0,7);ctx.fill()}   // grain
-    const spear=(x,len,ang)=>{ctx.save();ctx.translate(x,-6);ctx.rotate(ang);ctx.strokeStyle='#4a3220';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(len,0);ctx.stroke();ctx.fillStyle='#b9c2cc';ctx.beginPath();ctx.moveTo(len,0);ctx.lineTo(len-18,-6);ctx.lineTo(len+16,0);ctx.lineTo(len-18,6);ctx.fill();ctx.restore()};
-    spear(-30,130,-0.06);spear(120,120,0.1);spear(250,110,-0.18);
-    ctx.fillStyle='#9aa4ae';ctx.beginPath();ctx.ellipse(250,-8,28,9,0.1,0,7);ctx.fill();ctx.strokeStyle='#d4a443';ctx.lineWidth=2;ctx.stroke();    // dropped shield
-    ctx.fillStyle='#6a1f27';ctx.fillRect(300,-12,70,10);ctx.fillStyle='#8a2a34';ctx.fillRect(300,-12,70,3);   // bedroll
-    ctx.restore()}
-  // --- clue 2 : the broken watchtower ---
-  x0=sx(RX.clue2);if(x0>-400&&x0<W+300){ctx.save();ctx.translate(x0,GROUND);
-    ctx.fillStyle='rgba(0,0,0,.35)';ctx.beginPath();ctx.ellipse(110,2,130,10,0,0,7);ctx.fill();
-    const lg=ctx.createLinearGradient(0,-330,0,0);lg.addColorStop(0,'#2a1d14');lg.addColorStop(1,'#4a3524');ctx.fillStyle=lg;
-    ctx.fillRect(40,-90,150,90);ctx.fillStyle='#5a4636';ctx.fillRect(40,-92,150,6);
-    for(const lx of[56,164]){ctx.save();ctx.translate(lx,-90);ctx.fillStyle='#3a2918';ctx.beginPath();ctx.moveTo(-9,0);ctx.lineTo(9,0);ctx.lineTo(6,-230);ctx.lineTo(-6,-230);ctx.fill();ctx.restore()}
-    ctx.strokeStyle='#3a2918';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(56,-100);ctx.lineTo(164,-210);ctx.moveTo(164,-100);ctx.lineTo(56,-210);ctx.stroke();
-    ctx.fillStyle='#2f2217';ctx.fillRect(34,-326,152,16);ctx.fillRect(40,-312,10,70);ctx.fillRect(170,-312,10,70);
-    ctx.fillStyle='#2a1d14';ctx.beginPath();ctx.moveTo(30,-326);ctx.lineTo(70,-372);ctx.lineTo(96,-340);ctx.lineTo(130,-366);ctx.lineTo(160,-334);ctx.lineTo(190,-326);ctx.fill();   // broken roof
-    ctx.strokeStyle='#8a7a62';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(110,-310);ctx.lineTo(110,-290);ctx.stroke();ctx.beginPath();ctx.arc(110,-286,4,0,7);ctx.stroke();   // empty bell hook
-    ctx.save();ctx.translate(210,-6);ctx.rotate(0.06);ctx.strokeStyle='#5a3d22';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(120,-4);ctx.moveTo(0,-20);ctx.lineTo(120,-24);ctx.stroke();for(let i=0;i<7;i++){ctx.beginPath();ctx.moveTo(i*18,0);ctx.lineTo(i*18,-20);ctx.stroke()}ctx.restore();   // ladder on the ground
-    ctx.restore()}
-  // --- clue 3 : the dead messenger horse ---
-  x0=sx(RX.clue3);if(x0>-500&&x0<W+300){ctx.save();ctx.translate(x0,GROUND);
-    ctx.strokeStyle='rgba(30,16,10,.55)';ctx.lineWidth=0;ctx.fillStyle='rgba(28,16,10,.5)';
-    for(let r=0;r<2;r++)for(let i=0;i<24;i++){const fx_=-260+i*17+(r?8:0);ctx.beginPath();ctx.ellipse(fx_,10+r*12,5,2.5,0,0,7);ctx.fill();ctx.beginPath();ctx.ellipse(fx_-6,10+r*12,2.5,2,0,0,7);ctx.fill()}   // tracks heading left
-    ctx.fillStyle='rgba(0,0,0,.4)';ctx.beginPath();ctx.ellipse(170,3,110,9,0,0,7);ctx.fill();
-    const hg=ctx.createLinearGradient(0,-60,0,0);hg.addColorStop(0,'#4a3322');hg.addColorStop(1,'#2a1c12');ctx.fillStyle=hg;
-    ctx.beginPath();ctx.ellipse(170,-26,86,30,0,0,7);ctx.fill();                               // body
-    ctx.beginPath();ctx.moveTo(240,-40);ctx.quadraticCurveTo(290,-52,318,-30);ctx.lineTo(312,-14);ctx.quadraticCurveTo(284,-30,236,-18);ctx.fill();   // neck + head
-    ctx.beginPath();ctx.ellipse(318,-24,16,9,-0.2,0,7);ctx.fill();
-    ctx.strokeStyle='#2a1c12';ctx.lineWidth=7;ctx.lineCap='round';for(const l of[[110,-8,70,6],[134,-6,96,10],[220,-8,262,4],[244,-6,288,12]]){ctx.beginPath();ctx.moveTo(l[0],l[1]);ctx.lineTo(l[2],l[3]);ctx.stroke()}
-    ctx.fillStyle='#6a1f27';ctx.fillRect(140,-58,56,14);ctx.fillStyle='#d4a443';ctx.fillRect(140,-58,56,3);   // saddle cloth
-    ctx.fillStyle='#caa862';ctx.save();ctx.translate(186,-44);ctx.rotate(-0.5);ctx.fillRect(-4,-30,8,30);ctx.restore();     // empty message tube
-    ctx.fillStyle='rgba(255,190,110,.35)';ctx.beginPath();ctx.ellipse(160,-52,60,5,0,0,7);ctx.fill();
-    ctx.restore()}
+  const sx=x=>x-camX,spr=(img,x,base,sc)=>{const w=img.width*sc,h=img.height*sc;if(x+w<-40||x>W+40)return false;ctx.drawImage(img,x,base-h,w,h);return true};
+  const B=GROUND+14;
+  // clue 1: abandoned supplies and weapons
+  let x=sx(RX.clue1);if(x>-400&&x<W+300){ctx.fillStyle='rgba(0,0,0,.25)';ctx.beginPath();ctx.ellipse(x+140,B,150,9,0,0,7);ctx.fill();spr(BGI.prop_supplies,x,B+6,1.0)}
+  // clue 2: broken watchtower
+  x=sx(RX.clue2);if(x>-400&&x<W+300){ctx.fillStyle='rgba(0,0,0,.28)';ctx.beginPath();ctx.ellipse(x+130,B,140,10,0,0,7);ctx.fill();spr(BGI.prop_tower,x,B+8,1.0)}
+  // clue 3: dead horse + footprints leading back toward the capital
+  x=sx(RX.clue3);if(x>-600&&x<W+300){
+    ctx.fillStyle='rgba(30,18,10,.5)';for(let r=0;r<2;r++)for(let i=0;i<26;i++){const fx_=x-300+i*17+(r?8:0);ctx.beginPath();ctx.ellipse(fx_,B+2+r*12,5,2.4,0,0,7);ctx.fill();ctx.beginPath();ctx.ellipse(fx_-6,B+2+r*12,2.4,2,0,0,7);ctx.fill()}
+    ctx.fillStyle='rgba(0,0,0,.3)';ctx.beginPath();ctx.ellipse(x+135,B,130,8,0,0,7);ctx.fill();spr(BGI.prop_deadhorse,x,B+4,1.0)}
 }
 function forestOverlay(){
-  const m=rd.mood||0;ctx.fillStyle='rgba(14,32,24,'+(0.16+0.3*m)+')';ctx.fillRect(0,0,W,H+200);
-  for(let i=0;i<3;i++){const y=GROUND-100-i*46,off=(T*(10+i*6)+camX*(.2+i*.1))%W;const g=ctx.createLinearGradient(0,y-40,0,y+40);g.addColorStop(0,'rgba(170,200,190,0)');g.addColorStop(.5,'rgba(170,200,190,'+(0.05+m*0.1)+')');g.addColorStop(1,'rgba(170,200,190,0)');ctx.fillStyle=g;
+  const m=rd.mood||0;ctx.fillStyle='rgba(10,24,22,'+(0.04+0.14*m)+')';ctx.fillRect(0,0,W,H+200);
+  for(let i=0;i<3;i++){const y=GROUND-70-i*46,off=(T*(10+i*6)+camX*(.2+i*.1))%W;const g=ctx.createLinearGradient(0,y-40,0,y+40);g.addColorStop(0,'rgba(190,215,210,0)');g.addColorStop(.5,'rgba(190,215,210,'+(0.03+m*0.1)+')');g.addColorStop(1,'rgba(190,215,210,0)');ctx.fillStyle=g;
     ctx.fillRect(-off,y-40,W,80);ctx.fillRect(W-off,y-40,W,80)}
 }
 /* =====================================================================================
@@ -446,21 +438,13 @@ const OUTRO2=[
 ];
 const CHAPTER={n:'CHAPTER 1',title:'THE SILENT FRONTIER',sub:'The garrison has fallen. The dead have not stayed dead.'};
 const YDOOR={x:808};let cb={},ydg=0;
-const TINT={};
-function tinted(name){if(TINT[name])return TINT[name];const im=IMG[name],c=document.createElement('canvas');c.width=im.width;c.height=im.height;const x=c.getContext('2d');
-  x.drawImage(im,0,0);x.globalCompositeOperation='source-atop';x.fillStyle='rgba(42,58,92,0.55)';x.fillRect(0,0,c.width,c.height);x.fillStyle='rgba(20,10,10,0.18)';x.fillRect(0,0,c.width,c.height);TINT[name]=c;return c}
-function eBlit(name,f,x,y,face,scale,alpha){
-  const a=ANIMS[name],m=M[a.sheet];f=clamp(f|0,0,m.n-1);
-  ctx.save();ctx.globalAlpha=alpha==null?1:alpha;ctx.translate(x,y);ctx.scale(face*scale,scale);
-  ctx.drawImage(tinted(a.sheet),(f%m.cols)*m.CW,Math.floor(f/m.cols)*m.CH,m.CW,m.CH,-m.AX,-m.AY,m.CW,m.CH);ctx.restore();
-}
+const YG=440,YS=1.1;
 function beginYard(){
-  scn='yard';ph='fight';T=0;mode='scene';p.x=400;p.y=GROUND;p.vy=0;p.face=1;p.lock=false;p.weary=false;p.talk=false;p.hurt=-1;p.dead=-1;p.atk=false;p.jp=null;set('idle');
-  camX=0;zoom=zoomT=1;zf={x:W/2,y:GROUND-110};fade=1;fadeT=0;barsT=0;bars=0;fx=[];dl.active=false;ydg=0.18;seed=21;
-  party=makeParty();[95,150,205,255,305].forEach((x,i)=>{party[i].x=x-30;party[i].mv=false;party[i].face=1;party[i].ph=[.2,.5,.8,.35,.1][i]});
-  party[0].x=40;party[1].x=88;party[2].x=136;party[3].x=184;party[4].x=232;
+  scn='yard';ph='fight';T=0;mode='scene';p.x=330;p.y=GROUND;p.vy=0;p.face=1;p.lock=false;p.weary=false;p.talk=false;p.hurt=-1;p.dead=-1;p.atk=false;p.jp=null;set('idle');
+  camX=0;zoom=zoomT=1;zf={x:W/2,y:YG-110};fade=1;fadeT=0;barsT=0;bars=0;fx=[];dl.active=false;ydg=0.18;seed=21;
+  party=makeParty().filter(s=>s.id!=='horse');const px=[60,112,164,216,268];party.forEach((s,i)=>{s.x=px[i];s.mv=false;s.face=1;s.ph=[.2,.5,.8,.35,.1][i]});
   cb={hp:5,max:5,ps:'free',pt:0,guard:false,gt:0,cd:0,hitDone:false,vx:0,hs:0,slow:0,shake:0,
-    e:{x:640,hp:12,max:12,st:'enter',t:0,kind:null,qi:0,vuln:0,face:-1,ph:0,flash:0,dead:false,fallT:0,did:false,twitch:0,
+    e:{x:540,hp:12,max:12,st:'enter',t:0,kind:null,qi:0,vuln:0,face:-1,ph:0,flash:0,dead:false,fallT:0,did:false,twitch:0,
        queue:['light','light','heavy','light','heavy','light','light','heavy','light','heavy'],behind:true},
     hint:{text:'',t:0},seen:{atk:false,light:false,heavy:false,counter:false,dodged:false,parried:false},floats:[],out:null,hits:0};
   setHint('ATTACK  \u2014  tap  J  /  \u2694',99);sync();
@@ -468,12 +452,12 @@ function beginYard(){
 function setHint(t,d){cb.hint.text=t;cb.hint.t=d||4}
 function float(x,y,t,c){cb.floats.push({x,y,t,c:c||'#ffe2a0',life:0})}
 function enemyDamage(n,counter){const e=cb.e;if(e.dead)return;e.hp-=n;e.flash=.18;e.x+=-e.face*5;cb.hits++;sfx.hit();
-  float(e.x,GROUND-190,counter?'COUNTER!':'-'+n,counter?'#ff9a4a':'#ffe2a0');
+  float(e.x,YG-190,counter?'COUNTER!':'-'+n,counter?'#ff9a4a':'#ffe2a0');
   if(counter&&!cb.seen.counter){cb.seen.counter=true}
   if(!cb.seen.atk){cb.seen.atk=true}
   if(e.hp<=0){e.hp=0;e.dead=true;e.st='dead';e.fallT=0;cb.out={ph:'fall',t:0};p.lock=true;cb.guard=false;cb.ps='free';p.moving=false;sfx.thud();cb.slow=.6}}
-function playerHurt(n,knock){if(cb.ps==='dodge')return;cb.hp=Math.max(1,cb.hp-n);cb.ps='hurt';cb.pt=0;cb.vx=knock;cb.shake=.25;sfx.hit();float(p.x,GROUND-170,'-'+n,'#ff6a5a')}
-const ESPEC={light:{rate:44,sf:9,reach:150,lunge:70,wind:6,vuln:0.95},heavy:{rate:22,sf:11,reach:205,lunge:130,wind:9,vuln:1.35}};
+function playerHurt(n,knock){if(cb.ps==='dodge')return;cb.hp=Math.max(1,cb.hp-n);cb.ps='hurt';cb.pt=0;cb.vx=knock;cb.shake=.25;sfx.hit();float(p.x,YG-170,'-'+n,'#ff6a5a')}
+const ESPEC={light:{sheet:'gkLight',rate:30,sf:8,reach:160,lunge:62,wind:5,vuln:0.95},heavy:{sheet:'gkHeavy',rate:30,sf:24,reach:220,lunge:115,wind:19,vuln:1.35}};
 function yardInput(){const k=keys;return{l:k.KeyA||k.ArrowLeft,r:k.KeyD||k.ArrowRight,atk:k.KeyJ||k.KeyX,blk:k.KeyK,dge:k.KeyL||k.ShiftLeft}}
 let prevIn={atk:false,dge:false};
 function updateYard(dt){
@@ -491,7 +475,7 @@ function updateYard(dt){
       if(I.atk&&!prevIn.atk&&!cb.guard){cb.ps='atk';cb.pt=0;cb.hitDone=false;sfx.swing(false);if(cb.seen.atk&&cb.hint.t>90)setHint('',0)}
       else if(I.dge&&!prevIn.dge&&cb.cd<=0){cb.ps='dodge';cb.pt=0;cb.vx=(p.x<e.x?-1:1)*560;cb.cd=.7;cb.guard=false;sfx.dodge()}
       else{const sp=cb.guard?55:150;p.x+=dir*sp*dt;p.moving=!!dir;if(dir&&!cb.guard)p.ph+=Math.abs(dir)*sp*dt/ANIMS.walk.stride;
-        if(p.moving&&Math.floor(p.ph*2)!==p._pf&&!cb.guard){p._pf=Math.floor(p.ph*2);puff(p.x-p.face*14,GROUND,p.face)}}
+        if(p.moving&&Math.floor(p.ph*2)!==p._pf&&!cb.guard){p._pf=Math.floor(p.ph*2);puff(p.x-p.face*14,YG,p.face)}}
     }else if(cb.ps==='atk'){cb.pt+=dt;const f=Math.floor(cb.pt*46);
       if(f>=3&&f<10)p.x+=p.face*55*dt;
       if(!cb.hitDone&&f>=8){cb.hitDone=true;const d=Math.abs(e.x-p.x);
@@ -506,8 +490,8 @@ function updateYard(dt){
   // ------------- enemy -------------
   e.t+=dt;const dist=Math.abs(e.x-p.x);if(!e.dead&&e.st!=='stun'&&e.st!=='swing')e.face=p.x<e.x?-1:1;
   if(e.vuln>0)e.vuln-=dt;
-  if(e.st==='enter'){e.x-=62*dt;e.ph+=62*dt/ANIMS.walk.stride;if(e.x<560){e.behind=false}if(e.t>1.6){e.st='walk';e.t=0}}
-  else if(e.st==='walk'){const d=Math.sign(p.x-e.x);e.x+=d*72*dt;e.ph+=72*dt/ANIMS.walk.stride;if(dist<175){e.st='idle';e.t=0}}
+  if(e.st==='enter'){e.x-=62*dt;e.ph+=62*dt/ANIMS.gkWalk.stride;if(e.t>1.6){e.st='walk';e.t=0}}
+  else if(e.st==='walk'){const d=Math.sign(p.x-e.x);e.x+=d*72*dt;e.ph+=72*dt/ANIMS.gkWalk.stride;if(dist<175){e.st='idle';e.t=0}}
   else if(e.st==='idle'){if(dist>230){e.st='walk';e.t=0}else if(e.t>(e.qi===0?0.9:0.55)){e.kind=e.queue[e.qi%e.queue.length];e.qi++;e.st='swing';e.t=0;e.did=false;e.hit=false}}
   else if(e.st==='swing'){const sp=ESPEC[e.kind],f=e.t*sp.rate;
     if(f<sp.wind&&e.t<0.02){if(e.kind==='heavy'){if(!cb.seen.heavy){cb.seen.heavy=true;setHint('HEAVY SWING!  DODGE  \u2014  L  /  \u00BB',3.2)}}else if(!cb.seen.light){cb.seen.light=true;setHint('HE SWINGS!  BLOCK  \u2014  hold  K  (tap it just before the hit to PARRY)',3.8)}
@@ -516,17 +500,17 @@ function updateYard(dt){
     if(!e.did&&f>=sp.sf){e.did=true;sfx.swing(e.kind==='heavy');
       const d=Math.abs(e.x-p.x),front=((p.x-e.x)*e.face>0);
       if(d<sp.reach&&front){
-        if(cb.ps==='dodge'){cb.seen.dodged=true;e.vuln=sp.vuln;if(e.kind==='heavy'||true){setHint('PERFECT!  COUNTERATTACK  \u2014  J',2.6)}float(p.x,GROUND-200,'DODGE','#9fe0ff')}
+        if(cb.ps==='dodge'){cb.seen.dodged=true;e.vuln=sp.vuln;if(e.kind==='heavy'||true){setHint('PERFECT!  COUNTERATTACK  \u2014  J',2.6)}float(p.x,YG-200,'DODGE','#9fe0ff')}
         else if(cb.guard&&e.kind==='light'){
-          if(cb.gt<=0.24){sfx.parry();e.st='stun';e.t=0;e.vuln=1.7;cb.hs=.09;cb.slow=.35;cb.seen.parried=true;float(p.x+p.face*40,GROUND-190,'PARRY!','#fff3b0');setHint('PARRIED!  He is open  \u2014  COUNTERATTACK  J',2.8);sparks(p.x+p.face*60,GROUND-110)}
-          else{sfx.clash();p.x-=p.face*38;e.vuln=.45;sparks(p.x+p.face*60,GROUND-110);float(p.x,GROUND-190,'BLOCK','#cfe6ff')}}
+          if(cb.gt<=0.24){sfx.parry();e.st='stun';e.t=0;e.vuln=1.7;cb.hs=.09;cb.slow=.35;cb.seen.parried=true;float(p.x+p.face*40,YG-190,'PARRY!','#fff3b0');setHint('PARRIED!  He is open  \u2014  COUNTERATTACK  J',2.8);sparks(p.x+p.face*60,YG-110)}
+          else{sfx.clash();p.x-=p.face*38;e.vuln=.45;sparks(p.x+p.face*60,YG-110);float(p.x,YG-190,'BLOCK','#cfe6ff')}}
         else{const heavy=e.kind==='heavy';playerHurt(heavy?2:1,-p.face*(heavy?380:240));e.hit=true;e.vuln=.3}
       }else{e.vuln=sp.vuln}}
-    if(f>=M.attack.n-1&&e.st==='swing'){e.st='recover';e.t=0}}
+    if(f>=M[sp.sheet].n-1&&e.st==='swing'){e.st='recover';e.t=0}}
   else if(e.st==='recover'){if(e.t>0.5){e.st='idle';e.t=0}}
   else if(e.st==='stun'){e.vuln=Math.max(e.vuln,.2);if(e.t>1.6){e.st='idle';e.t=0}}
   else if(e.st==='dead'){e.fallT+=real}
-  e.x=clamp(e.x,90,860);
+  e.x=clamp(e.x,90,840);
   // companions idle, the temple door breathes
   party.forEach(s=>{s.mv=false});
   if(e.dead)updateOutro(real);
@@ -537,93 +521,59 @@ function sparks(x,y){for(let i=0;i<14;i++)fx.push({k:'spark',x:x+camX,y,vx:(rnd(
 function updateOutro(dt){
   const o=cb.out,e=cb.e;if(!o)return;o.t+=dt;ydg=Math.min(1,ydg);
   if(o.ph==='fall'){if(o.t>2.4){o.ph='approach';o.t=0;p.lock=true}}
-  else if(o.ph==='approach'){const tx=e.x-135;p.face=1;if(p.x<tx-4){p.x+=105*dt;set('walk');p.ph+=105*dt/ANIMS.walk.stride;p.moving=true;if(Math.floor(p.ph*2)!==p._pf){p._pf=Math.floor(p.ph*2);puff(p.x-14,GROUND,1)}}
+  else if(o.ph==='approach'){const tx=e.x-135;p.face=1;if(p.x<tx-4){p.x+=105*dt;set('walk');p.ph+=105*dt/ANIMS.walk.stride;p.moving=true;if(Math.floor(p.ph*2)!==p._pf){p._pf=Math.floor(p.ph*2);puff(p.x-14,YG,1)}}
     else{p.moving=false;set('idle');o.ph='say1';o.t=0;barsT=1;say(OUTRO,()=>{o.ph='twitch';o.t=0;sfx.thud()})}}
-  else if(o.ph==='say1'){zoomT=1.45;zf.x+=((e.x-camX)-zf.x)*Math.min(1,3*dt);zf.y+=((GROUND-60)-zf.y)*Math.min(1,3*dt)}
+  else if(o.ph==='say1'){zoomT=1.45;zf.x+=((e.x-camX)-zf.x)*Math.min(1,3*dt);zf.y+=((YG-60)-zf.y)*Math.min(1,3*dt)}
   else if(o.ph==='twitch'){zoomT=1.45;e.twitch=1;if(o.t>1.3){o.ph='still';o.t=0;e.twitch=0}
     if(o.t>0.5)p.x=Math.max(p.x-70*dt,e.x-210)}
   else if(o.ph==='still'){zoomT=1.3;if(o.t>1.4){o.ph='breath';o.t=0;sfx.rumble(true,.4);cb.shake=.5}}
   else if(o.ph==='breath'){zoomT=1.1;ydg=Math.min(1,.2+o.t*.26);cb.shake=Math.max(cb.shake,.12);sfx.rumble(true,.4+ydg*.6);
     if(o.t>3.2&&!o.said){o.said=true;say(OUTRO2,()=>{o.ph='fade';o.t=0})}}
   else if(o.ph==='fade'){fadeT=1;if(o.t>2.2){sfx.rumble(false);go('chap','card');fade=1;fadeT=1;barsT=0;dl.active=false;sync()}}
-  if(['say1','twitch','still','breath'].includes(o.ph)&&o.ph!=='say1'){zf.x+=((e.x-camX-30)-zf.x)*Math.min(1,3*dt);zf.y+=((GROUND-100)-zf.y)*Math.min(1,3*dt)}
+  if(['say1','twitch','still','breath'].includes(o.ph)&&o.ph!=='say1'){zf.x+=((e.x-camX-30)-zf.x)*Math.min(1,3*dt);zf.y+=((YG-100)-zf.y)*Math.min(1,3*dt)}
 }
 /* ---------------- drawing the courtyard ---------------- */
-function drawPillarAt(x,w,top){const g=ctx.createLinearGradient(x-w/2,0,x+w/2,0);g.addColorStop(0,'#2b2018');g.addColorStop(.4,'#6b5442');g.addColorStop(1,'#241812');ctx.fillStyle=g;ctx.fillRect(x-w/2,top,w,GROUND-top);
-  ctx.fillStyle='#d4a443';ctx.fillRect(x-w/2-3,top+40,w+6,6);ctx.fillRect(x-w/2-3,GROUND-60,w+6,6);ctx.fillStyle='#3a2a20';ctx.fillRect(x-w/2-8,GROUND-22,w+16,22);ctx.fillRect(x-w/2-6,top,w+12,16)}
 function drawYardBG(){
-  const Tm=BGI.temple,tw=Tm.width,th=Tm.height;ctx.fillStyle='#4a2430';ctx.fillRect(0,0,W,H);ctx.drawImage(Tm,0,GROUND+8-th,tw,th);ctx.drawImage(Tm,tw-1,GROUND+8-th,tw,th);
-  ctx.fillStyle='rgba(30,12,8,.5)';ctx.fillRect(0,0,W,GROUND);
-  // courtyard wall + pillars
-  const wg=ctx.createLinearGradient(0,GROUND-250,0,GROUND);wg.addColorStop(0,'#2c211b');wg.addColorStop(1,'#42342a');ctx.fillStyle=wg;ctx.fillRect(0,GROUND-250,W,250);
-  ctx.fillStyle='#241a14';for(let i=0;i<W;i+=48)ctx.fillRect(i,GROUND-266,30,18);
-  ctx.strokeStyle='rgba(0,0,0,.18)';ctx.lineWidth=2;for(let r=0;r<5;r++){ctx.beginPath();ctx.moveTo(0,GROUND-240+r*48);ctx.lineTo(W,GROUND-240+r*48);ctx.stroke()}
-  for(const px of[40,330,600])drawPillarAt(px,60,GROUND-250);
-  // torn Chola banners
-  for(const bx of[190,465]){const sw=Math.sin(T*1.3+bx)*5;ctx.fillStyle='#6a1520';ctx.beginPath();ctx.moveTo(bx-30,GROUND-244);ctx.lineTo(bx+30,GROUND-244);ctx.lineTo(bx+34+sw,GROUND-110);ctx.lineTo(bx+16+sw,GROUND-132);ctx.lineTo(bx+4+sw,GROUND-96);ctx.lineTo(bx-14+sw,GROUND-126);ctx.lineTo(bx-32+sw,GROUND-84);ctx.closePath();ctx.fill();
-    ctx.strokeStyle='#d4a443';ctx.lineWidth=2;ctx.stroke();ctx.fillStyle='#d4a443';ctx.beginPath();ctx.arc(bx,GROUND-196,12,0,7);ctx.fill()}
-  // sealed temple door with glowing cracks
-  const dx=YDOOR.x,dw=210,dh=260,top=GROUND-dh;
-  const st=ctx.createLinearGradient(0,top-30,0,GROUND);st.addColorStop(0,'#3a2c24');st.addColorStop(1,'#241a14');ctx.fillStyle=st;ctx.fillRect(dx-dw/2-34,top-34,dw+68,dh+34);
-  ctx.fillStyle='#d4a443';ctx.fillRect(dx-dw/2-34,top-34,dw+68,6);
-  ctx.fillStyle='#0b0605';ctx.beginPath();ctx.moveTo(dx-dw/2,GROUND);ctx.lineTo(dx-dw/2,top+60);ctx.quadraticCurveTo(dx-dw/2,top,dx,top-4);ctx.quadraticCurveTo(dx+dw/2,top,dx+dw/2,top+60);ctx.lineTo(dx+dw/2,GROUND);ctx.fill();
-  const shake=(scn==='yard'&&cb.out&&cb.out.ph==='breath')?Math.sin(T*55)*1.6*ydg:0;
-  for(const side of[-1,1]){const x0=side<0?dx-dw/2+shake:dx+shake;const dg=ctx.createLinearGradient(x0,0,x0+dw/2,0);dg.addColorStop(0,'#3a2414');dg.addColorStop(1,'#26170c');ctx.fillStyle=dg;ctx.fillRect(x0,top+16,dw/2-2,dh-16);
-    ctx.fillStyle='#1a1410';for(let r=0;r<4;r++)ctx.fillRect(x0,top+54+r*52,dw/2-2,9)}
-  ctx.fillStyle='#2a2018';ctx.fillRect(dx-dw/2-6,top+110,dw+12,16);ctx.fillStyle='#d4a443';ctx.fillRect(dx-dw/2-6,top+110,dw+12,3);          // the great bar
-  const pulse=.75+.25*Math.sin(T*2.2);ctx.save();ctx.globalCompositeOperation='lighter';ctx.strokeStyle='rgba(255,100,26,'+(.5+.3*ydg)*pulse+')';ctx.lineWidth=2+2*ydg;ctx.lineCap='round';
-  const cracks=[[[dx,top+20],[dx-4,top+70],[dx+6,top+120],[dx-3,top+170],[dx,GROUND-6]],[[dx-40,top+60],[dx-52,top+110],[dx-44,top+150]],[[dx+30,top+90],[dx+46,top+140],[dx+38,top+190]],[[dx-80,top+130],[dx-60,top+176]],[[dx+70,top+40],[dx+82,top+84]]];
-  for(const c of cracks){ctx.beginPath();c.forEach((q,i)=>i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]));ctx.stroke()}
-  const gl=ctx.createRadialGradient(dx,GROUND-120,10,dx,GROUND-120,330+120*ydg);gl.addColorStop(0,'rgba(255,120,40,'+(.26+.5*ydg)+')');gl.addColorStop(1,'rgba(255,90,20,0)');ctx.fillStyle=gl;ctx.fillRect(dx-460,GROUND-460,920,520);ctx.restore();
-  // paved ground
-  const fg=ctx.createLinearGradient(0,GROUND-8,0,H+120);fg.addColorStop(0,'#4a3c32');fg.addColorStop(1,'#1c1512');ctx.fillStyle=fg;ctx.fillRect(0,GROUND-8,W,H+140);
-  ctx.strokeStyle='rgba(0,0,0,.35)';ctx.lineWidth=2;for(let r=0;r<7;r++){const yy=GROUND+6+r*r*3.4;ctx.beginPath();ctx.moveTo(0,yy);ctx.lineTo(W,yy);ctx.stroke()}
-  for(let i=-6;i<26;i++){ctx.beginPath();ctx.moveTo(480+(i*58-480)*.55,GROUND);ctx.lineTo(480+(i*58-480)*1.6,H+120);ctx.stroke()}
-  // door light spilling over the stones
-  ctx.save();ctx.globalCompositeOperation='lighter';const sp=ctx.createRadialGradient(dx-40,GROUND+14,10,dx-40,GROUND+14,380);sp.addColorStop(0,'rgba(255,110,40,'+(.24+.4*ydg)+')');sp.addColorStop(1,'rgba(255,90,20,0)');ctx.save();ctx.translate(0,GROUND+14);ctx.scale(1,.28);ctx.translate(0,-(GROUND+14));ctx.fillStyle=sp;ctx.fillRect(dx-420,GROUND-300,840,700);ctx.restore();ctx.restore();
-  // scattered weapons
-  const sp2=(x,y,len,a)=>{ctx.save();ctx.translate(x,y);ctx.rotate(a);ctx.strokeStyle='#4a3220';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(len,0);ctx.stroke();ctx.fillStyle='#aab4be';ctx.beginPath();ctx.moveTo(len,0);ctx.lineTo(len-16,-5);ctx.lineTo(len+14,0);ctx.lineTo(len-16,5);ctx.fill();ctx.restore()};
-  sp2(150,GROUND+26,110,.08);sp2(420,GROUND+40,100,-.2);sp2(520,GROUND+20,90,.3);sp2(700,GROUND+44,110,-.05);
-  ctx.fillStyle='#8f9aa5';for(const s of[[330,GROUND+34],[610,GROUND+52],[110,GROUND+50]]){ctx.beginPath();ctx.ellipse(s[0],s[1],26,8,.1,0,7);ctx.fill();ctx.strokeStyle='#d4a443';ctx.lineWidth=2;ctx.stroke()}
-  ctx.strokeStyle='#b9c2cc';ctx.lineWidth=3;for(const s of[[250,GROUND+58,40],[560,GROUND+62,46],[760,GROUND+36,38]]){ctx.beginPath();ctx.moveTo(s[0],s[1]);ctx.lineTo(s[0]+s[2],s[1]-6);ctx.stroke()}
+  const Y=BGI.yard;ctx.fillStyle='#1a120e';ctx.fillRect(-100,0,W+200,H+260);
+  ctx.drawImage(Y,0,0,W,536);ctx.drawImage(Y,0,500,W,36,0,536,W,260);
+  const fg=ctx.createLinearGradient(0,536,0,H+260);fg.addColorStop(0,'rgba(10,6,6,0)');fg.addColorStop(1,'rgba(10,6,6,.75)');ctx.fillStyle=fg;ctx.fillRect(0,536,W,260);
+  // the sealed door glows through its cracks; it grows brighter as the dead stay down
+  const pulse=.78+.22*Math.sin(T*2.2),k=(.4+.6*ydg)*pulse;
+  ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=Math.min(1,k);ctx.drawImage(BGI.yardglow,0,0,W,536);ctx.globalAlpha=Math.min(1,k*.6);ctx.drawImage(BGI.yardglow,0,0,W,536);
+  const dx=845,dy=300,gl=ctx.createRadialGradient(dx,dy,10,dx,dy,330+140*ydg);gl.addColorStop(0,'rgba(255,120,40,'+(.22+.5*ydg)+')');gl.addColorStop(1,'rgba(255,90,20,0)');ctx.fillStyle=gl;ctx.fillRect(dx-480,dy-480,960,760);
+  const sp=ctx.createRadialGradient(dx-30,YG+10,10,dx-30,YG+10,380);sp.addColorStop(0,'rgba(255,110,40,'+(.2+.4*ydg)+')');sp.addColorStop(1,'rgba(255,90,20,0)');ctx.save();ctx.translate(0,YG+10);ctx.scale(1,.3);ctx.translate(0,-(YG+10));ctx.fillStyle=sp;ctx.fillRect(dx-420,YG-300,840,700);ctx.restore();
+  ctx.restore();
+  if(ydg>0.5){ctx.fillStyle='rgba(30,6,0,'+((ydg-.5)*.35)+')';ctx.fillRect(0,0,W,H+200)}
 }
 function drawEnemy(){
-  const e=cb.e,dx=e.x,y=GROUND;let name='walk',f=0;const sc=0.72;
-  if(e.st==='enter'||e.st==='walk'){name='walk';f=Math.floor((e.ph%1)*M.walk.n)%M.walk.n}
-  else if(e.st==='idle'||e.st==='recover'||e.st==='stun'){name='idle';f=pingpong(Math.floor(T*10),M.idle.n)}
-  else if(e.st==='swing'){name='attack';f=Math.min(M.attack.n-1,Math.floor(e.t*ESPEC[e.kind].rate))}
-  else if(e.st==='dead'){name='fall';f=Math.min(M.fall.n-1,Math.floor(e.fallT*24))}
-  const jit=e.twitch?(Math.sin(T*70)*1.6):0;
-  shadow(dx,y,52);
-  eBlit(name,f,dx+jit,y+(e.twitch?Math.sin(T*50)*1.2:0),e.face*(name==='fall'?-1:1)*(name==='fall'?1:1),sc,1);
+  const e=cb.e,dx=e.x,y=YG;let name='gkIdle',f=0,alpha=1;
+  if(e.st==='enter'||e.st==='walk'){name='gkWalk';f=Math.floor((e.ph%1)*M.gkWalk.n)%M.gkWalk.n;if(e.st==='enter')alpha=Math.min(1,e.t/0.8)}
+  else if(e.st==='idle'||e.st==='recover'||e.st==='stun'){name='gkIdle';f=pingpong(Math.floor(T*8),M.gkIdle.n)}
+  else if(e.st==='swing'){const sp=ESPEC[e.kind];name=sp.sheet;f=Math.min(M[name].n-1,Math.floor(e.t*sp.rate))}
+  else if(e.st==='dead'){name='gkFall';f=Math.min(M.gkFall.n-1,Math.floor(e.fallT*24))}
+  const jit=e.twitch?(Math.sin(T*70)*1.6):0,sc=ANIMS[name].scale*YS;
+  shadow(dx,y,56,alpha);
+  blit(name,f,dx+jit,y+(e.twitch?Math.sin(T*50)*1.2:0),e.face,sc,alpha);
   if(e.flash>0){ctx.save();ctx.globalAlpha=e.flash*3.2;ctx.globalCompositeOperation='lighter';ctx.fillStyle='#ffd6a0';ctx.beginPath();ctx.ellipse(dx,y-100,38,90,0,0,7);ctx.fill();ctx.restore()}
-  if(!e.dead){const tele=e.st==='swing'&&e.t*ESPEC[e.kind].rate<ESPEC[e.kind].wind;
-    ctx.save();ctx.globalCompositeOperation='lighter';const gx=dx+e.face*12,gy=y-124;const r=tele?(e.kind==='heavy'?34:20):10;
-    const g=ctx.createRadialGradient(gx,gy,1,gx,gy,r);g.addColorStop(0,tele&&e.kind==='heavy'?'rgba(255,70,40,.95)':'rgba(255,150,40,.9)');g.addColorStop(1,'rgba(255,100,20,0)');ctx.fillStyle=g;ctx.fillRect(gx-r,gy-r,2*r,2*r);ctx.restore();
-    if(tele&&e.kind==='heavy'){ctx.save();ctx.globalCompositeOperation='lighter';ctx.strokeStyle='rgba(255,70,40,.6)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(dx,y-100,80+Math.sin(T*40)*4,0,7);ctx.stroke();ctx.restore()}}
+  if(!e.dead&&e.st==='swing'){const sp=ESPEC[e.kind],tele=e.t*sp.rate<sp.wind;
+    if(tele){ctx.save();ctx.globalCompositeOperation='lighter';const heavy=e.kind==='heavy';ctx.strokeStyle=heavy?'rgba(255,70,40,.7)':'rgba(255,170,60,.5)';ctx.lineWidth=heavy?4:2.5;ctx.beginPath();ctx.arc(dx,y-105,(heavy?92:72)+Math.sin(T*40)*4,0,7);ctx.stroke();
+      const g=ctx.createRadialGradient(dx,y-105,10,dx,y-105,heavy?120:80);g.addColorStop(0,heavy?'rgba(255,60,30,.28)':'rgba(255,150,40,.2)');g.addColorStop(1,'rgba(255,60,30,0)');ctx.fillStyle=g;ctx.fillRect(dx-130,y-235,260,260);ctx.restore()}}
 }
 function drawYardPlayer(){
   const dx=p.x-camX;let name='idle',f=0,alpha=1;
-  const m=cb;
+  const m=cb;const py=YG,ps=YS;
   if(m.ps==='atk'){name='attack';f=Math.min(M.attack.n-1,Math.floor(m.pt*46))}
   else if(m.ps==='dodge'){name='jump';f=6+Math.min(12,Math.floor(m.pt/0.42*13));alpha=.92;
-    for(let i=1;i<=3;i++){ctx.save();ctx.globalAlpha=.16/i;blit('jump',f,dx-(cb.vx>0?1:-1)*i*26*-1,p.y,p.face,ANIMS.jump.scale);ctx.restore()}}
+    for(let i=1;i<=3;i++){ctx.save();ctx.globalAlpha=.16/i;blit('jump',f,dx-(cb.vx>0?1:-1)*i*26*-1,py,p.face,ANIMS.jump.scale*ps);ctx.restore()}}
   else if(m.ps==='hurt'){name='hurt';f=Math.min(M.hurt.n-1,Math.floor(m.pt*24))}
   else if(m.guard){name='idle';f=2}
   else if(p.moving){name='walk';f=Math.floor((p.ph%1)*M.walk.n)%M.walk.n}
   else{name='idle';f=pingpong(Math.floor(T*10),M.idle.n)}
-  shadow(dx,GROUND,50);blit(name,f,dx,p.y,p.face,ANIMS[name].scale,alpha);
-  if(m.guard){ctx.save();ctx.globalCompositeOperation='lighter';const a=m.gt<=.24?.8:.3;ctx.strokeStyle='rgba(255,230,160,'+a+')';ctx.lineWidth=m.gt<=.24?5:2.5;ctx.beginPath();ctx.arc(dx+p.face*34,GROUND-100,58,-1.1,1.1);ctx.stroke();ctx.restore()}
+  shadow(dx,YG,54);blit(name,f,dx,py,p.face,ANIMS[name].scale*ps,alpha);
+  if(m.guard){ctx.save();ctx.globalCompositeOperation='lighter';const a=m.gt<=.24?.8:.3;ctx.strokeStyle='rgba(255,230,160,'+a+')';ctx.lineWidth=m.gt<=.24?5:2.5;ctx.beginPath();ctx.arc(dx+p.face*34,YG-110,62,-1.1,1.1);ctx.stroke();ctx.restore()}
 }
 function drawYardScene(){
-  drawYardBG();
-  const e=cb.e;
-  drawParty();                            // companions wait at the gate of the courtyard
-  if(e.behind){drawEnemy();drawPillarAt(600,60,GROUND-250)}else{drawEnemy()}
-  drawYardPlayer();
-  // sparks
-  fxDraw();
-  // companion reaction marks
+  drawYardBG();partyDraw(YG,YS);drawEnemy();drawYardPlayer();fxDraw();
 }
 /* ---------------- HUD + chapter card ---------------- */
 function yardHUD(){
@@ -669,7 +619,7 @@ function drawIntro(){
   ctx.restore();ctx.textAlign='left';
   ctx.fillStyle='rgba(216,193,154,'+(0.35+0.2*Math.sin(T*3))+')';ctx.font='15px Georgia,serif';ctx.textAlign='center';ctx.fillText('tap to continue',W/2,H-30);ctx.textAlign='left';
 }
-function updateTitle(dt){fadeT=1;fade=1;if(scn==='title'&&T>7.2)beginRoad()}
+function updateTitle(dt){fadeT=1;fade=1;if(scn==='title'&&T>7.2)beginGate()}
 function drawTitle(){
   const tt=scn==='end'?T+8:T;
   ctx.fillStyle='#050203';ctx.fillRect(0,0,W,H);motesDraw('rgba(255,170,90,A)');
@@ -685,9 +635,9 @@ function portrait(who,cx,cy,r){
   const gg=ctx.createRadialGradient(cx,cy,4,cx,cy,r);gg.addColorStop(0,'rgba(190,120,60,.35)');gg.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=gg;ctx.fillRect(cx-r,cy-r,2*r,2*r);
   let img,m,sx,sy,sw;
   if(who==='Vetri'||who==='Commander'){img=IMG.talk;m=M.talk;sx=m.AX-40;sy=2;sw=80}
-  else if(who==='Young Soldier'){img=IMG.soldierA;m=M.soldierA;sx=m.AX-38;sy=2;sw=76}
+  else if(who==='Young Soldier'){img=IMG.youngIdle;m=M.youngIdle;sx=m.AX-40;sy=2;sw=80}
   else if(who==='Veteran'){img=IMG.soldierB;m=M.soldierB;sx=m.AX-34;sy=2;sw=68}
-  else if(who==='Scout'){img=IMG.msgAnn;m=M.msgAnn;sx=m.AX-58;sy=4;sw=88}
+  else if(who==='Scout'){img=IMG.scoutIdle;m=M.scoutIdle;sx=m.AX-38;sy=2;sw=76}
   else if(who==='Royal Messenger'){img=IMG.msgAnn;m=M.msgAnn;sx=m.AX-58;sy=4;sw=88}
   else{img=IMG.kidle;m=M.kidle;sx=m.AX-46;sy=6;sw=92}
   ctx.drawImage(img,sx,sy,sw,sw,cx-r,cy-r,2*r,2*r);ctx.restore();
@@ -714,11 +664,11 @@ function update(dt){
   if(mode==='scene'){
     if(scn==='intro')updateIntro(dt);else if(scn==='s1'){updatePlayer(dt);updateS1(dt)}
     else if(scn==='s2')updateS2(dt);else if(scn==='title'||scn==='end')updateTitle(dt);
-    else if(scn==='road'){updatePlayer(dt);updateRoad(dt)}else if(scn==='yard'){updateYard(dt)}else if(scn==='chap')updateChapter(dt);
+    else if(scn==='gate'){updateGate(dt)}else if(scn==='road'){updatePlayer(dt);updateRoad(dt)}else if(scn==='yard'){updateYard(dt)}else if(scn==='chap')updateChapter(dt);
   }else{updatePlayer(dt);camX+=((p.x-W/2)-camX)*Math.min(1,6*dt);camX=clamp(camX,0,WORLD-W)}
   bars+=(barsT-bars)*Math.min(1,4*dt);zoom+=(zoomT-zoom)*Math.min(1,2.2*dt);fade+=(fadeT-fade)*Math.min(1,2.6*dt);
-  cyT=(dl.active&&(scn==='s1'||scn==='s2'||scn==='road'||scn==='yard'))?-68:0;cy+=(cyT-cy)*Math.min(1,3*dt);
-  if(!['s2','road','yard'].includes(scn)){zf.x=W/2;zf.y=GROUND-110}
+  cyT=(dl.active&&(scn==='s1'||scn==='s2'||scn==='road'||scn==='yard'||scn==='gate'))?-68:0;cy+=(cyT-cy)*Math.min(1,3*dt);
+  if(!['s2','road','yard','gate'].includes(scn)){zf.x=W/2;zf.y=GROUND-110}
   update.s=(update.s||0)+dt;if(update.s>0.15){update.s=0;sync()}
 }
 function render(){
@@ -728,7 +678,8 @@ function render(){
   if(mode==='scene'&&scn==='chap'){drawChapter();return}
   ctx.save();ctx.translate(0,cy);if(zoom!==1){ctx.translate(zf.x,zf.y);ctx.scale(zoom,zoom);ctx.translate(-zf.x,-zf.y)}
   const shk=Math.max((rd&&rd.shake)||0,(scn==='yard'&&cb&&cb.shake)||0);if(shk>0)ctx.translate((Math.random()-.5)*shk*14,(Math.random()-.5)*shk*10);
-  if(scn==='road'){bg();forestOverlay();drawGate();drawClues();drawParty();drawPlayer();fxDraw()}
+  if(scn==='gate')drawGateScene();
+  else if(scn==='road'){drawForestBG();forestOverlay();drawClues();drawParty();drawPlayer();fxDraw()}
   else if(scn==='yard')drawYardScene();
   else if(scn==='s2')drawS2();
   else{bg();if(mode==='scene')drawSoldiers();drawPlayer();fxDraw();if(mode==='scene')drawMsg()}

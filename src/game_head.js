@@ -41,13 +41,18 @@ const ANIMS={
   soldierA:{sheet:'soldierA',stride:150,scale:0.58},soldierB:{sheet:'soldierB',stride:190,scale:0.62},
   archer:{sheet:'archer',stride:150,scale:0.64},shield:{sheet:'shield',stride:150,scale:0.66},bearer:{sheet:'bearer',stride:155,scale:0.6},
   kidle:{sheet:'kidle',fps:8,loop:'pingpong',scale:0.66},kspeak:{sheet:'kspeak',fps:8,loop:'pingpong',scale:0.66},kread:{sheet:'kread',fps:12,loop:false,scale:0.66},
+  scoutWalk:{sheet:'scoutWalk',stride:170,scale:0.66},scoutIdle:{sheet:'scoutIdle',scale:0.66},scoutRun:{sheet:'scoutRun',stride:250,scale:0.66},
+  youngWalk:{sheet:'youngWalk',stride:187,scale:0.64},youngIdle:{sheet:'youngIdle',scale:0.64},youngRun:{sheet:'youngRun',stride:150,scale:0.64},
+  horse:{sheet:'horse',stride:140,scale:0.56},
+  gkIdle:{sheet:'gkIdle',scale:0.66},gkWalk:{sheet:'gkWalk',stride:105,scale:0.66},gkLight:{sheet:'gkLight',scale:0.66},gkHeavy:{sheet:'gkHeavy',scale:0.66},gkFall:{sheet:'gkFall',scale:0.66},
   msgRun:{sheet:'msgRun',stride:175,scale:0.6},msgStop:{sheet:'msgStop',fps:12,scale:0.6},msgAnn:{sheet:'msgAnn',fps:8,loop:'pingpong',scale:0.6,native:-1}
 };
 const SHEETS=Object.keys(M);
-const IMG={},BGI={};let loaded=0;const BGN=['temple','banyan','road','court','pillars','scroll'];const total=SHEETS.length+BGN.length;
+const IMG={},BGI={};let loaded=0;const BGN=['temple','banyan','road','court','pillars','scroll','forest_warm','forest_cold','yard','yardglow','gate'],PRN=['supplies','tower','deadhorse'];const total=SHEETS.length+BGN.length+PRN.length;
 const done=()=>{if(++loaded==total)requestAnimationFrame(loop)};
 SHEETS.forEach(n=>{const i=new Image();i.onload=done;i.src=(window.ASSETS&&window.ASSETS[n])||('assets/'+n+'.webp');IMG[n]=i});
 BGN.forEach(n=>{const i=new Image();i.onload=done;i.src=(window.ASSETS&&window.ASSETS['bg_'+n])||('assets/bg_'+n+'.webp');BGI[n]=i});
+PRN.forEach(n=>{const i=new Image();i.onload=done;i.src=(window.ASSETS&&window.ASSETS['prop_'+n])||('assets/prop_'+n+'.webp');BGI['prop_'+n]=i});
 const keys={};
 const lerp=(a,b,t)=>a+(b-a)*t,clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),ease=t=>t*t*(3-2*t);
 let seed=5;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
